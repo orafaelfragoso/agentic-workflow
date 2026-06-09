@@ -12,6 +12,30 @@
   "license": "MIT",
   "keywords": ["columbus", "go", "typescript", "commit", "triage", "agents", "skills", "hooks", "codex"],
   "skills": "./skills/",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/scripts/prompt.sh"
+          }
+        ]
+      }
+    ]
+  },
   "interface": {
     "displayName": "Agentic Workflow",
     "shortDescription": "Columbus-managed memory, skills, agents, and hooks.",

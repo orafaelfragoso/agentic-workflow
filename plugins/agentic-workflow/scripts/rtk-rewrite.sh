@@ -25,10 +25,14 @@ fi
 
 # Version guard: rtk rewrite was added in 0.23.0.
 # Older binaries: warn once and exit cleanly (no silent failure).
-# Cache the version check to avoid spawning multiple processes on every hook call.
+# Cache the version check to avoid spawning multiple processes on every hook
+# call. The cache is invalidated whenever the rtk binary is newer than the
+# cache file (covers upgrades AND downgrades, which both replace the binary),
+# and is only written after a successfully parsed, passing check.
 CACHE_DIR=${XDG_CACHE_HOME:-$HOME/.cache}
 CACHE_FILE="$CACHE_DIR/rtk-hook-version-ok"
-if [ ! -f "$CACHE_FILE" ]; then
+RTK_BIN=$(command -v rtk)
+if [ ! -f "$CACHE_FILE" ] || [ "$CACHE_FILE" -ot "$RTK_BIN" ]; then
   RTK_VERSION_RAW=$(rtk --version 2>/dev/null)
   RTK_VERSION=${RTK_VERSION_RAW#rtk }
   RTK_VERSION=${RTK_VERSION%% *}
@@ -39,9 +43,10 @@ if [ ! -f "$CACHE_FILE" ]; then
       echo "[rtk] WARNING: rtk $RTK_VERSION is too old (need >= 0.23.0). Upgrade: cargo install rtk" >&2
       exit 0
     fi
+    mkdir -p "$CACHE_DIR" 2>/dev/null
+    touch "$CACHE_FILE" 2>/dev/null
   fi
-  mkdir -p "$CACHE_DIR" 2>/dev/null
-  touch "$CACHE_FILE" 2>/dev/null
+  # Unparsable version: skip caching so the check reruns next call.
 fi
 
 INPUT=$(cat)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-build_prompt() {
+emit_rules() {
 cat <<'EOF'
 ## Working Rules
 
@@ -12,11 +12,29 @@ cat <<'EOF'
 - Delegate sparingly. Use `navigator` for codebase exploration and the most specific delivery agent for implementation, tests, quality review, security/CVE analysis, architecture review, or release readiness. Give each agent a self-contained brief and trust its returned report.
 - For third-party libraries, frameworks, SDKs, external APIs, dependency behavior, or CVE claims, verify current information with Context7 (or WebSearch if Context7 is unavailable), security tooling, package manager data, or live advisory sources before coding, pinning, or asserting safety.
 EOF
+}
+
+# SessionStart hooks may emit plain stdout (added as context) or a JSON
+# envelope. Without jq we can neither parse Columbus output nor build the
+# JSON envelope, so degrade to plain-text context instead of failing the hook.
+if ! command -v jq > /dev/null 2>&1; then
+  emit_rules
+  printf '\n## Project Context\n'
+  printf -- '- (jq not found on PATH - project context unavailable; install jq: https://jqlang.github.io/jq/download/)\n'
+  exit 0
+fi
+
+build_prompt() {
+emit_rules
 
 printf '\n## Project Context\n'
 if command -v columbus > /dev/null 2>&1; then
-  ids="$(columbus memory list context --tag global --json 2>/dev/null | jq -r '.items[]?.id' 2>/dev/null || true)"
+  # The global --limit defaults to 15; raise it explicitly so global memories
+  # are never silently truncated once a project accrues more than 15.
+  ids="$(columbus memory list context --tag global --limit 500 --json 2>/dev/null | jq -r '.items[]?.id' 2>/dev/null || true)"
   if [ -n "$ids" ]; then
+    # `memory list --json` returns ids/titles only (no bodies), so one
+    # `show memory` per id is required to render the body text.
     while IFS= read -r id; do
       [ -n "$id" ] || continue
       columbus show memory "$id" --json 2>/dev/null \

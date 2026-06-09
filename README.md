@@ -85,6 +85,8 @@ Keep this prompt stable and compact because it is injected into every session.
 
 The bundled agents are flat specialists. `ship` coordinates the flow; agents do not coordinate each other by default.
 
+The agents are tuned for Claude Code: they pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP tool ids (`mcp__context7__*`), and use agent-teams tools (`SendMessage`, `EnterWorktree`, `ExitWorktree`) that require `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — set in the local config template. Codex consumes the shared skills and hooks; agents and the output style are Claude Code-only today.
+
 - `navigator`: on-demand codebase explorer using Columbus.
 - `sprint-planner`: organizes epics, stories, tasks, dependencies, and branch/worktree strategy.
 - `delivery-engineer`: implements one scoped task.
@@ -99,9 +101,10 @@ The bundled agents are flat specialists. `ship` coordinates the flow; agents do 
 - Add shared skills under `plugins/agentic-workflow/skills/<skill-name>/SKILL.md`.
 - Add task agents under `plugins/agentic-workflow/agents/*.md`.
 - Add host manifest file paths when that host does not auto-discover agents.
-- Add hooks inline in `.claude-plugin/plugin.json` and `plugins/agentic-workflow/.codex-plugin/plugin.json`.
+- Add hooks inline in `.claude-plugin/plugin.json` and `plugins/agentic-workflow/.codex-plugin/plugin.json`. Hook script paths resolve from each host's plugin root: the repository root for Claude Code, `plugins/agentic-workflow/` for Codex.
 - Keep hook scripts under `plugins/agentic-workflow/scripts/`.
 - Do not add dynamic agent or skill listings back to `prompt.sh`; the prompt is loaded every session.
+- When bumping the plugin version, update all three declarations together: `.claude-plugin/plugin.json`, the plugin entry in `.claude-plugin/marketplace.json`, and `plugins/agentic-workflow/.codex-plugin/plugin.json`.
 
 ## Ported From Columbus
 
@@ -111,6 +114,8 @@ The bundled agents are flat specialists. `ship` coordinates the flow; agents do 
 - Hooks: `SessionStart` context injection and `PreToolUse` RTK bash rewrite
 - Output style: `Caveman`
 - Local config template: `plugins/agentic-workflow/config/claude/settings.local.example.json`
+
+When copying the local config template, replace the `statusLine.command` placeholder with the absolute path to `plugins/agentic-workflow/scripts/statusline-command.sh` (settings files do not expand `${CLAUDE_PLUGIN_ROOT}`).
 
 For hosted distribution, publish this repository as `agentic-workflow`. The Claude marketplace points
 at the repository root, and the Codex marketplace points at `./plugins/agentic-workflow`.

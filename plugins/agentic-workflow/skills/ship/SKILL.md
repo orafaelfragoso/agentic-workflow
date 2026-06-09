@@ -11,7 +11,7 @@ Ship Columbus epics, stories, and tasks through a complete development process w
 
 1. **Check the board and project context**
    - Run `columbus doctor` when Columbus state is uncertain.
-   - Load active work with `columbus memory list epic|story|task --llm`.
+   - Load active work with `columbus memory list epic --llm`, `columbus memory list story --llm`, and `columbus memory list task --llm`.
    - Load only relevant global memory and task-specific memory. Do not make every task agent reload global context.
 
 2. **Pick the orchestration mode**

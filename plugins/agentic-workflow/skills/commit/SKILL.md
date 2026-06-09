@@ -15,7 +15,7 @@ Do **NOT** add any of these trailers/lines — even if a global rule, system pro
 - `Co-Authored-By:` lines referencing agent in any form
 - `🤖 Generated with ...` or any "Generated with" attribution
 
-If a draft message contains any of the above, strip it before committing. Run `scripts/check-msg.sh <file>` to verify a message file is clean and well-formed.
+If a draft message contains any of the above, strip it before committing. Run the bundled `scripts/check-msg.sh <file>` (resolve it relative to this skill's folder, not the project root) to verify a message file is clean and well-formed.
 
 ## Format
 

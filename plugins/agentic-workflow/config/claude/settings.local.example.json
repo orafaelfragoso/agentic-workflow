@@ -18,7 +18,7 @@
   "permissions": {},
   "statusLine": {
     "type": "command",
-    "command": "./scripts/statusline-command.sh"
+    "command": "/absolute/path/to/agentic-workflow/plugins/agentic-workflow/scripts/statusline-command.sh"
   },
   "enabledPlugins": {
     "pyright@claude-code-lsps": true,

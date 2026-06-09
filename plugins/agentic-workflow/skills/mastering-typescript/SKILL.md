@@ -1,27 +1,6 @@
 ---
 name: mastering-typescript
 description: Master modern, type-safe TypeScript — type-system depth (generics, mapped/conditional types, satisfies), enterprise patterns (Result-style error handling, Zod 4 validation at boundaries), type-safe React, and a current toolchain (Vite 8, Node 24 or Bun, ESLint 10, Vitest 4). Use when building or reviewing type-safe apps, migrating JavaScript to TypeScript, configuring tsconfig/toolchains, or implementing advanced type patterns.
-version: 2.0.0
-category: programming-languages
-triggers:
-  - typescript
-  - ts
-  - type-safe
-  - generics
-  - react typescript
-  - typescript migration
-  - tsconfig
-  - type guards
-  - mapped types
-  - conditional types
-  - satisfies operator
-  - zod validation
-tags:
-  - typescript
-  - type-safety
-  - react
-  - vite
-  - zod
 ---
 
 # Mastering Modern TypeScript

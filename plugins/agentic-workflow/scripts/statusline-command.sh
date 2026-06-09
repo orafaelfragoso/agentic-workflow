@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Claude Code status line script
 # Format: Model (effort) | worktree/branch or branch | tokens | 5h% | 7d% | cost
 
@@ -122,7 +122,7 @@ session_tokens=$((total_input + total_output))
 format_k() {
   local n=$1
   if [ "$n" -ge 1000 ]; then
-    printf "%.1fK" "$(echo "scale=1; $n / 1000" | bc)"
+    awk -v n="$n" 'BEGIN { printf "%.1fK", n / 1000 }'
   else
     echo "$n"
   fi
@@ -175,50 +175,12 @@ week_str=""
 # ---------------------------------------------------------------------------
 # Claude Code tracks the running total for the entire session in
 # .cost.total_cost_usd — across every turn and model. Use it directly.
-# (.context_window.current_usage.* is ONLY the latest turn, which is why the
-# old per-token math here showed just the last prompt's cost.)
+# If the harness doesn't provide it (older schema), show nothing rather than
+# estimating from hardcoded per-token prices that silently go stale.
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // .total_cost_usd // empty')
 
-# Fallback: if the harness didn't provide a cumulative figure (older schema),
-# estimate from the latest turn's usage. NOTE: last-turn only, not the session.
-if [ -z "$cost" ]; then
-  cache_creation=$(echo "$input" | jq -r '.context_window.current_usage.cache_creation_input_tokens // 0')
-  cache_read=$(echo "$input" | jq -r '.context_window.current_usage.cache_read_input_tokens // 0')
-  cur_input=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')
-  cur_output=$(echo "$input" | jq -r '.context_window.current_usage.output_tokens // 0')
-
-  model_id=$(echo "$input" | jq -r '.model.id // ""')
-
-  # Pick pricing tier (per 1M tokens, USD)
-  if echo "$model_id" | grep -qi "opus"; then
-    input_price="15"
-    output_price="75"
-    cache_write_price="18.75"
-    cache_read_price="1.50"
-  elif echo "$model_id" | grep -qi "haiku"; then
-    input_price="0.80"
-    output_price="4"
-    cache_write_price="1"
-    cache_read_price="0.08"
-  else
-    # Sonnet default
-    input_price="3"
-    output_price="15"
-    cache_write_price="3.75"
-    cache_read_price="0.30"
-  fi
-
-  cost=$(echo "scale=6
-    i=$cur_input
-    o=$cur_output
-    cw=$cache_creation
-    cr=$cache_read
-    cost=(i*${input_price} + o*${output_price} + cw*${cache_write_price} + cr*${cache_read_price}) / 1000000
-    cost" | bc 2>/dev/null)
-fi
-
 cost_str=""
-if [ -n "$cost" ] && [ "$(echo "$cost > 0" | bc 2>/dev/null)" = "1" ]; then
+if [ -n "$cost" ] && awk -v c="$cost" 'BEGIN { exit !(c > 0) }'; then
   formatted=$(printf "\$%.3f" "$cost")
   cost_str="${DIM}cost:${RESET}${BRIGHT_MAGENTA}${formatted}${RESET}"
 fi

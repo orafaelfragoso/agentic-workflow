@@ -1,28 +1,6 @@
 ---
 name: mastering-golang
 description: Master modern, idiomatic Go — language fundamentals (interfaces, structs, zero values), concurrency done right (goroutines, channels, context, errgroup, synctest), generics and range-over-func iterators, errors-as-values handling, the stdlib-first toolkit (slog, slices/maps/cmp), and a current toolchain (Go 1.26, go fix modernizers, golangci-lint v2, race/fuzz testing). Use when writing or reviewing Go, designing packages and APIs, fixing concurrency or error-handling issues, modernizing legacy Go, or wiring go.mod/build/test/CI.
-version: 1.0.0
-category: programming-languages
-triggers:
-  - go
-  - golang
-  - goroutine
-  - channels
-  - context
-  - go generics
-  - go error handling
-  - go modules
-  - go testing
-  - golangci-lint
-  - iterators
-  - go concurrency
-tags:
-  - go
-  - golang
-  - concurrency
-  - generics
-  - stdlib
-  - testing
 ---
 
 # Mastering Modern Go

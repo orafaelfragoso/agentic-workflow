@@ -27,8 +27,9 @@ If `.columbus.json` is missing or the index is empty, stop and tell the user to 
 
 ### 2. Load durable context
 
+Global context (`--tag global`) is already injected at session start by the plugin's SessionStart hook — do not reload it. Load the interview-specific layers:
+
 ```sh
-columbus memory list context --tag global --llm    # project-wide truths (load every session)
 columbus memory list context --type glossary --llm  # the glossary
 columbus memory list context --type decision --llm  # recorded decisions
 ```
@@ -61,7 +62,7 @@ columbus memory add context --type glossary --title "<Term>" \
   --tag <scope>
 ```
 
-**Decision** — record only when all three hold: (1) **hard to reverse**, (2) **surprising without context**, (3) **the result of a real trade-off**. If any is missing, skip it. Search for a prior decision on the same ground first; if the plan revises an earlier call, `edit` it and note the change in consequences rather than adding a contradictory second decision. Anchor it to the code it governs so it stays verifiable.
+**Decision** — record only when all three hold: (1) **hard to reverse**, (2) **surprising without context**, (3) **the result of a real trade-off**. If any is missing, skip it. Search for a prior decision on the same ground first; if the plan revises an earlier call, `memory update` it and note the change in consequences rather than adding a contradictory second decision. Anchor it to the code it governs so it stays verifiable.
 
 ```sh
 columbus memory add context --type decision --title "<decision title>" \

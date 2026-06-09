@@ -26,6 +26,8 @@ columbus reindex --full
 - `columbus show symbol <name>`: show symbol definitions.
 - `columbus show file <path>`: show a file outline and graph.
 - `columbus show memory <id>`: show one memory.
+- `columbus show epic <id>`: show an epic with fields, refs, history, and child tasks.
+- `columbus show task <id>`: show a task with fields, refs, and history.
 - `columbus graphs`: project the indexed dependency graph.
 
 Useful examples:
@@ -36,6 +38,7 @@ columbus search "token verification" --kind code --llm
 columbus search "auth decision" --kind memory --llm
 columbus show symbol VerifyToken --llm --in auth --snippet-lines 20
 columbus show file internal/auth/service.go --llm
+columbus show task task_123 --llm
 columbus graphs --llm --in auth --depth 1 --max 40
 ```
 
