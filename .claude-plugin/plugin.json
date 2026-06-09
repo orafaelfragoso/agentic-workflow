@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "agentic-workflow",
   "displayName": "Agentic Workflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Agentic workflow with a Columbus-managed memory system, reusable skills, agents, and hooks.",
   "author": {
     "name": "Rafael Fragoso",

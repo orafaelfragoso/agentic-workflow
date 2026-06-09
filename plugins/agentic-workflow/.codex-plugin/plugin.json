@@ -1,6 +1,6 @@
 {
   "name": "agentic-workflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Agentic workflow with a Columbus-managed memory system, reusable skills, agents, and hooks.",
   "author": {
     "name": "Rafael Fragoso",
