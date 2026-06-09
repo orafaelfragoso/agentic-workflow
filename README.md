@@ -23,7 +23,14 @@ Codex uses `plugins/agentic-workflow/.codex-plugin/plugin.json`.
 
 ## Claude Code
 
-Install from this local marketplace:
+Install from the hosted marketplace:
+
+```bash
+claude plugin marketplace add orafaelfragoso/agentic-workflow
+claude plugin install agentic-workflow@agentic-workflow
+```
+
+When working from a local clone, add the marketplace from the repository root instead:
 
 ```bash
 claude plugin marketplace add ./
