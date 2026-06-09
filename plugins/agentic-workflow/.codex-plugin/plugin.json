@@ -1,0 +1,24 @@
+{
+  "name": "agentic-workflow",
+  "version": "0.1.0",
+  "description": "Agentic workflow with a Columbus-managed memory system, reusable skills, agents, and hooks.",
+  "author": {
+    "name": "Rafael Fragoso",
+    "email": "rafaelfragosom@gmail.com",
+    "url": "https://github.com/orafaelfragoso"
+  },
+  "homepage": "https://github.com/orafaelfragoso/agentic-workflow",
+  "repository": "https://github.com/orafaelfragoso/agentic-workflow",
+  "license": "MIT",
+  "keywords": ["columbus", "go", "typescript", "commit", "triage", "agents", "skills", "hooks", "codex"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agentic Workflow",
+    "shortDescription": "Columbus-managed memory, skills, agents, and hooks.",
+    "longDescription": "Agentic Workflow packages a Columbus-managed sprint workflow with reusable skills, Navigator, specialist delivery agents, and hooks for context injection and command rewriting across Claude Code and Codex.",
+    "developerName": "Rafael Fragoso",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": ["Use $agentic-workflow to work with the Columbus-managed memory workflow."]
+  }
+}

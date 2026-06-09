@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "agentic-workflow",
+  "displayName": "Agentic Workflow",
+  "version": "0.1.0",
+  "description": "Agentic workflow with a Columbus-managed memory system, reusable skills, agents, and hooks.",
+  "author": {
+    "name": "Rafael Fragoso",
+    "email": "rafaelfragosom@gmail.com",
+    "url": "https://github.com/orafaelfragoso"
+  },
+  "license": "MIT",
+  "keywords": ["columbus", "go", "typescript", "commit", "triage", "agents", "skills", "hooks", "claude-code"],
+  "skills": "./plugins/agentic-workflow/skills/",
+  "agents": [
+    "./plugins/agentic-workflow/agents/navigator.md",
+    "./plugins/agentic-workflow/agents/sprint-planner.md",
+    "./plugins/agentic-workflow/agents/delivery-engineer.md",
+    "./plugins/agentic-workflow/agents/test-engineer.md",
+    "./plugins/agentic-workflow/agents/quality-reviewer.md",
+    "./plugins/agentic-workflow/agents/security-analyst.md",
+    "./plugins/agentic-workflow/agents/architecture-reviewer.md",
+    "./plugins/agentic-workflow/agents/release-coordinator.md"
+  ],
+  "outputStyles": ["./plugins/agentic-workflow/output-styles/caveman.md"],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/plugins/agentic-workflow/scripts/rtk-rewrite.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/plugins/agentic-workflow/scripts/prompt.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "defaultEnabled": true
+}

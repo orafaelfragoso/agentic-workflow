@@ -1,0 +1,44 @@
+# golangci-lint v2 config — copy to .golangci.yml
+# Docs: https://golangci-lint.run  (run: `go tool golangci-lint run`)
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  # v2 starts from a curated default set; add the high-signal extras.
+  enable:
+    - errcheck      # unchecked errors
+    - govet         # std vet analyzers
+    - staticcheck   # bundles gosimple + unused in v2
+    - ineffassign   # ineffectual assignments
+    - revive        # fast, configurable style/correctness
+    - gocritic      # opinionated correctness/perf checks
+    - bodyclose     # unclosed http.Response.Body
+    - misspell      # typos in comments/strings
+    - unconvert     # redundant type conversions
+    # - gosec       # enable for security-sensitive services
+
+  settings:
+    revive:
+      rules:
+        - name: exported            # exported symbols need doc comments
+        - name: context-as-argument # context.Context is the first param
+    gocritic:
+      enabled-tags: [diagnostic, performance]
+
+  exclusions:
+    rules:
+      # Test files: relax a few noisy rules.
+      - path: _test\.go
+        linters: [errcheck, gosec]
+
+# v2 splits formatting out of linters.
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - example.com/app   # group your module's imports last
