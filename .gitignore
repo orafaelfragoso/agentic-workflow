@@ -1,5 +1,6 @@
 .DS_Store
 *.log
+NOTES.md
 .claude/settings.local.json
 .codex/
 node_modules/
