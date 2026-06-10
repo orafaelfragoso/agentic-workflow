@@ -14,7 +14,7 @@ Create a focused task agent that can be used by any compatible agent host and fi
    - Keep the agent narrow. Prefer one strong responsibility over a broad role that overlaps existing agents.
 
 2. **Choose the target convention**
-   - In this plugin, default to `plugins/agentic-workflow/agents/<name>.md`.
+   - In this plugin, default to `plugins/columbus-workflow/agents/<name>.md`.
    - In another project, follow the existing agent directory, manifest, or plugin convention.
    - If the user asks for a global/user-level agent, use that host's documented global location.
    - If no convention is discoverable, ask for the target path before writing.

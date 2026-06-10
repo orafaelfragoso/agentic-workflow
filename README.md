@@ -1,19 +1,18 @@
-# Agentic Workflow
+# Columbus Workflow
 
-This repository is a single cross-tool agent plugin. Both Claude Code and Codex install the same
-asset package at `plugins/agentic-workflow`. Claude Code uses `.claude-plugin/plugin.json`, and
-Codex uses `plugins/agentic-workflow/.codex-plugin/plugin.json`.
+This repository hosts the **Columbus Workflow** Claude Code plugin, distributed through the
+`orafaelfragoso` marketplace. The marketplace manifest lives at `.claude-plugin/marketplace.json`,
+the plugin manifest at `.claude-plugin/plugin.json`, and all plugin assets under
+`plugins/columbus-workflow/`.
 
 ## Layout
 
 ```text
 .
-├── .agents/plugins/marketplace.json       # Codex local marketplace catalog
 ├── .claude-plugin/
-│   ├── marketplace.json                   # Claude Code marketplace catalog
-│   └── plugin.json                        # Claude Code plugin manifest
-└── plugins/agentic-workflow/              # Shared Claude Code + Codex package
-    ├── .codex-plugin/plugin.json          # Codex plugin manifest
+│   ├── marketplace.json                   # Marketplace catalog (orafaelfragoso)
+│   └── plugin.json                        # Plugin manifest
+└── plugins/columbus-workflow/             # Plugin assets
     ├── agents/
     ├── config/claude/settings.local.example.json
     ├── output-styles/caveman.md
@@ -21,20 +20,20 @@ Codex uses `plugins/agentic-workflow/.codex-plugin/plugin.json`.
     └── skills/
 ```
 
-## Claude Code
+## Installation
 
 Install from the hosted marketplace:
 
 ```bash
 claude plugin marketplace add orafaelfragoso/agentic-workflow
-claude plugin install agentic-workflow@agentic-workflow
+claude plugin install columbus-workflow@orafaelfragoso
 ```
 
 When working from a local clone, add the marketplace from the repository root instead:
 
 ```bash
 claude plugin marketplace add ./
-claude plugin install agentic-workflow@agentic-workflow
+claude plugin install columbus-workflow@orafaelfragoso
 ```
 
 When developing locally, validate the plugin from the repository root:
@@ -43,23 +42,8 @@ When developing locally, validate the plugin from the repository root:
 claude plugin validate .
 ```
 
-Claude Code loads assets through root manifest paths that point into `plugins/agentic-workflow/`.
-Add new Claude agents to the `agents` list in `.claude-plugin/plugin.json`.
-
-## Codex
-
-The Codex marketplace catalog points at `./plugins/agentic-workflow`. Unlike Claude Code, the
-current Codex marketplace loader does not expose plugins whose source path is the marketplace root.
-
-For a non-default local marketplace, register the marketplace root, then add the plugin:
-
-```bash
-codex plugin marketplace add ./
-codex plugin add agentic-workflow@agentic-workflow
-```
-
-Use the `codex plugin` install flow above as the Codex smoke test. The bundled helper validator
-currently rejects inline hooks, while the CLI install path accepts them.
+Claude Code loads assets through root manifest paths that point into `plugins/columbus-workflow/`.
+Add new agents to the `agents` list in `.claude-plugin/plugin.json`.
 
 ## Ship Delivery Model
 
@@ -75,13 +59,13 @@ This plugin adapts sprint delivery around Columbus instead of a report registry:
 
 `ship` keeps its top-level instructions short and loads one of three references based on the work shape:
 
-- `plugins/agentic-workflow/skills/ship/references/direct.md`
-- `plugins/agentic-workflow/skills/ship/references/sequential.md`
-- `plugins/agentic-workflow/skills/ship/references/parallel.md`
+- `plugins/columbus-workflow/skills/ship/references/direct.md`
+- `plugins/columbus-workflow/skills/ship/references/sequential.md`
+- `plugins/columbus-workflow/skills/ship/references/parallel.md`
 
 ## Session Context
 
-`plugins/agentic-workflow/scripts/prompt.sh` is loaded on `SessionStart` for startup, clear, and compact events. It intentionally emits only:
+`plugins/columbus-workflow/scripts/prompt.sh` is loaded on `SessionStart` for startup, clear, and compact events. It intentionally emits only:
 
 - compact working rules for Columbus, board updates, `ship`, delegation, branch/worktree strategy, and current external-doc/security checks
 - `## Project Context`, populated from Columbus memories tagged `global`
@@ -92,7 +76,7 @@ Keep this prompt stable and compact because it is injected into every session.
 
 The bundled agents are flat specialists. `ship` coordinates the flow; agents do not coordinate each other by default.
 
-The agents are tuned for Claude Code: they pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP tool ids (`mcp__context7__*`), and use agent-teams tools (`SendMessage`, `EnterWorktree`, `ExitWorktree`) that require `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — set in the local config template. Codex consumes the shared skills and hooks; agents and the output style are Claude Code-only today.
+The agents pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP tool ids (`mcp__context7__*`), and use agent-teams tools (`SendMessage`, `EnterWorktree`, `ExitWorktree`) that require `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — set in the local config template.
 
 - `navigator`: on-demand codebase explorer using Columbus.
 - `sprint-planner`: organizes epics, stories, tasks, dependencies, and branch/worktree strategy.
@@ -105,24 +89,28 @@ The agents are tuned for Claude Code: they pin Claude model aliases (`haiku`/`so
 
 ## Adding Components
 
-- Add shared skills under `plugins/agentic-workflow/skills/<skill-name>/SKILL.md`.
-- Add task agents under `plugins/agentic-workflow/agents/*.md`.
-- Add host manifest file paths when that host does not auto-discover agents.
-- Add hooks inline in `.claude-plugin/plugin.json` and `plugins/agentic-workflow/.codex-plugin/plugin.json`. Hook script paths resolve from each host's plugin root: the repository root for Claude Code, `plugins/agentic-workflow/` for Codex.
-- Keep hook scripts under `plugins/agentic-workflow/scripts/`.
+- Add skills under `plugins/columbus-workflow/skills/<skill-name>/SKILL.md`.
+- Add task agents under `plugins/columbus-workflow/agents/*.md` and register them in `.claude-plugin/plugin.json`.
+- Add hooks inline in `.claude-plugin/plugin.json`. Hook script paths resolve from the plugin root (the repository root), so prefix them with `${CLAUDE_PLUGIN_ROOT}`.
+- Keep hook scripts under `plugins/columbus-workflow/scripts/`.
 - Do not add dynamic agent or skill listings back to `prompt.sh`; the prompt is loaded every session.
-- When bumping the plugin version, update all three declarations together: `.claude-plugin/plugin.json`, the plugin entry in `.claude-plugin/marketplace.json`, and `plugins/agentic-workflow/.codex-plugin/plugin.json`.
+- When bumping the plugin version, update both declarations together: `.claude-plugin/plugin.json` and the plugin entry in `.claude-plugin/marketplace.json`.
 
-## Ported From Columbus
+## Bundled Components
 
-- Skills: `ship`, `columbus`, `commit`, `mastering-golang`, `interview`, `mastering-typescript`, `triage`, `write-a-skill`, `write-an-agent`
+- Skills: `ship`, `columbus`, `commit`, `interview`, `triage`, `improve`, `setting-sail`, `mastering-golang`, `mastering-typescript`, `write-a-skill`, `write-an-agent`
 - Agents: `navigator`, `sprint-planner`, `delivery-engineer`, `test-engineer`, `quality-reviewer`, `security-analyst`, `architecture-reviewer`, `release-coordinator`
 - Scripts: `prompt.sh`, `rtk-rewrite.sh`, `statusline-command.sh`
 - Hooks: `SessionStart` context injection and `PreToolUse` RTK bash rewrite
 - Output style: `Caveman`
-- Local config template: `plugins/agentic-workflow/config/claude/settings.local.example.json`
+- Local config template: `plugins/columbus-workflow/config/claude/settings.local.example.json`
 
-When copying the local config template, replace the `statusLine.command` placeholder with the absolute path to `plugins/agentic-workflow/scripts/statusline-command.sh` (settings files do not expand `${CLAUDE_PLUGIN_ROOT}`).
+The `setting-sail` skill applies the recommended settings as your global Claude Code defaults and
+installs the bundled statusline script (it runs
+`plugins/columbus-workflow/skills/setting-sail/scripts/setup-settings.sh`). When copying the local
+config template manually instead, replace the `statusLine.command` placeholder with the absolute
+path to `plugins/columbus-workflow/scripts/statusline-command.sh` (settings files do not expand
+`${CLAUDE_PLUGIN_ROOT}`).
 
-For hosted distribution, publish this repository as `agentic-workflow`. The Claude marketplace points
-at the repository root, and the Codex marketplace points at `./plugins/agentic-workflow`.
+For hosted distribution, this repository is published as `orafaelfragoso/agentic-workflow`; the
+marketplace catalog points at the repository root.

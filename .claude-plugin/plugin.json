@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "columbus",
+  "name": "columbus-workflow",
   "displayName": "Columbus Workflow",
   "version": "0.2.0",
   "description": "Columbus workflow with a fast indexed memory system, reusable skills, agents, and hooks.",

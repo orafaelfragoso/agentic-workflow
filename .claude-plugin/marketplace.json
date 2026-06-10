@@ -4,7 +4,7 @@
     "name": "Rafael Fragoso",
     "url": "https://github.com/orafaelfragoso"
   },
-  "description": "Local marketplace for the Agentic Workflow plugin.",
+  "description": "Marketplace for the Columbus Workflow plugin.",
   "plugins": [
     {
       "name": "columbus-workflow",
@@ -23,7 +23,6 @@
         "agents",
         "skills",
         "hooks",
-        "codex",
         "claude-code"
       ]
     }
