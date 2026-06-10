@@ -1,6 +1,6 @@
 ---
 name: columbus
-description: Teaches how Columbus works as a local semantic code-context and durable memory system, with references for commands, retrieval, memory (adr, plan, documentation), setup, and agent usage. Use when the user asks how Columbus works, wants to learn Columbus, needs Columbus command examples, asks about search, indexing, memory, ADRs, plans, documentation memories, navigator usage, or says "teach me Columbus".
+description: Teaches how Columbus CLI works as a local semantic code-context and durable memory system, with references for commands, retrieval, memory (adr, plan, documentation), setup, and agent usage. Use when the user asks how Columbus works, wants to learn Columbus, needs Columbus command examples, asks about search, indexing, memory, ADRs, plans, documentation memories, navigator usage, or says "teach me Columbus".
 ---
 
 # Columbus
