@@ -49,12 +49,12 @@ Add new agents to the `agents` list in `.claude-plugin/plugin.json`.
 
 This plugin adapts sprint delivery around Columbus instead of a report registry:
 
-- The active session is the coordinator. It loads global Columbus memory once through the startup prompt.
-- `ship` processes Columbus epics, stories, and tasks through direct, sequential, or parallel delivery flows.
+- The active session is the coordinator. It retrieves the relevant Columbus memory (ADRs, plans, documentation) once and passes scoped context to agents.
+- `ship` executes Columbus `plan` memories through direct, sequential, or parallel delivery flows. Live execution state lives in the session; Columbus holds the durable record.
 - `navigator` is the on-demand codebase explorer. It can be invoked directly or by orchestration, uses Columbus to locate relevant code, and returns one cited report.
 - Specialist agents cover planning, implementation, tests, quality review, security/CVE review, architecture review, and release readiness.
-- Task agents should not re-read global memory, broad reports, or registries. The coordinator passes only the context each task needs.
-- Delivery keeps the Columbus board current: tasks move to `in_progress` before implementation, `blocked` when stuck, and `done` only after verification.
+- Task agents should not re-run broad memory retrieval. The coordinator passes only the context each task needs and owns all memory writes.
+- Delivery closes out in memory: plan bodies are updated at milestones, decisions are recorded as `adr`, shipped behavior as `documentation`, and executed plans are re-kinded or removed.
 - Branch and worktree strategy is part of the flow: direct work can stay on one branch, sequential work usually stays on one branch, and parallel work should use separate branches or worktrees when agents edit concurrently.
 
 `ship` keeps its top-level instructions short and loads one of three references based on the work shape:
@@ -65,10 +65,7 @@ This plugin adapts sprint delivery around Columbus instead of a report registry:
 
 ## Session Context
 
-`plugins/columbus-workflow/scripts/prompt.sh` is loaded on `SessionStart` for startup, clear, and compact events. It intentionally emits only:
-
-- compact working rules for Columbus, board updates, `ship`, delegation, branch/worktree strategy, and current external-doc/security checks
-- `## Project Context`, populated from Columbus memories tagged `global`
+`plugins/columbus-workflow/scripts/prompt.sh` is loaded on `SessionStart` for startup, clear, and compact events. It intentionally emits only compact working rules: Columbus retrieval, plan-driven delivery with `ship`, delegation, change/verification discipline, git safety, and current external-doc/security checks.
 
 Keep this prompt stable and compact because it is injected into every session.
 
@@ -79,13 +76,13 @@ The bundled agents are flat specialists. `ship` coordinates the flow; agents do 
 The agents pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP tool ids (`mcp__context7__*`), and use agent-teams tools (`SendMessage`, `EnterWorktree`, `ExitWorktree`) that require `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — set in the local config template.
 
 - `navigator`: on-demand codebase explorer using Columbus.
-- `sprint-planner`: organizes epics, stories, tasks, dependencies, and branch/worktree strategy.
-- `delivery-engineer`: implements one scoped task.
+- `sprint-planner`: turns plan memories into an execution plan with dependencies and branch/worktree strategy.
+- `delivery-engineer`: implements one scoped piece of planned work.
 - `test-engineer`: designs and runs verification.
-- `quality-reviewer`: reviews correctness, maintainability, regression risk, and task fit.
+- `quality-reviewer`: reviews correctness, maintainability, regression risk, and fit with the planned scope.
 - `security-analyst`: reviews vulnerabilities, dependency/CVE exposure, secrets, auth, and data-handling risk.
 - `architecture-reviewer`: reviews patterns, boundaries, coupling, and abstractions.
-- `release-coordinator`: checks branch, merge, PR, verification, and board readiness.
+- `release-coordinator`: checks branch, merge, PR, verification, and plan-closeout readiness.
 
 ## Adding Components
 

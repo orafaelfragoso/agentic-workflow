@@ -9,9 +9,10 @@ Columbus is a local-only semantic code-context system. It indexes the current re
    - Stores file chunks, symbol metadata, semantic embeddings, and dependency graph information.
    - Queried with `search`, `show`, and `graphs`.
 
-2. **Durable knowledge**
+2. **Durable memory**
    - Managed with `columbus memory`.
-   - Stores context memories, epics, stories, tasks, tags, references, and evidence.
+   - Three kinds: `adr` (decisions and rationale), `plan` (intended work), `documentation` (how things work).
+   - Memories carry tags, links to files/symbols, and line-range evidence; `memory validate` detects drift against the code.
    - Exported and imported with `columbus export` and `columbus import`.
 
 ## The Retrieval Loop
@@ -41,4 +42,4 @@ Use Columbus as a locator first and a reader second:
 
 Use this short version:
 
-> Columbus gives an agent a grounded map of a repository. Search finds likely files and symbols, show reads focused details, graphs explain dependency shape, and memory preserves project decisions and work context between sessions.
+> Columbus gives an agent a grounded map of a repository. Search finds likely files and symbols, show reads focused details, graphs explain dependency shape, and memory preserves decisions (adr), intended work (plan), and explanations (documentation) between sessions — anchored to code with links and evidence.

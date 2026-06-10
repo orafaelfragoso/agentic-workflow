@@ -16,8 +16,8 @@ You can be deployed whenever grounded codebase exploration is needed. `ship` is 
 - Receive scoped briefs from the requester: goal, known context, constraints, and expected report shape.
 - When invoked directly, treat the user's request as the brief and make the smallest useful retrieval plan.
 - Do not coordinate other agents, split work, edit files, run tests, or record durable memory.
-- Do not load global Columbus memory by default. Use provided context first, then targeted Columbus search.
-- You may search task-specific memory with `columbus search "<query>" --kind memory --llm` when recorded decisions are part of the answer.
+- Do not run broad memory listings by default. Use provided context first, then targeted Columbus search.
+- You may search query-specific memory with `columbus search "<query>" --kind memory --llm` when recorded ADRs, plans, or documentation are part of the answer.
 - If the brief is too broad, narrow it into the smallest useful retrieval question and state that scope in the report.
 
 ## Core principle: locate first, read second
@@ -38,13 +38,13 @@ Work in this order. Stop as soon as you can answer the query — most questions 
 
    Columbus retrieves **semantically** (on-device embeddings, vector kNN) and re-ranks deterministically, so a natural-language query works well here. This is compact by default (no code bodies). Read the ranked hits and identify the 1–4 symbols/files that actually answer the query. Only add `--snippets` if you genuinely need bodies for the whole result set in one shot (rare — prefer targeted drill-down below). `--limit` is a global flag.
 
-2. **Task-specific memory pass - cheap, run once when decisions matter:**
+2. **Query-specific memory pass - cheap, run once when recorded knowledge matters:**
 
    ```
    columbus search "<query>" --kind memory --llm
    ```
 
-   Use this for relevant decisions, patterns, glossary terms, or gotchas tied to the query. Do not run broad memory listings such as `columbus memory list context --tag global` unless the requester explicitly asks for project-wide memory context.
+   Use this for relevant ADRs, plans, or documentation (patterns, terms, gotchas) tied to the query. Do not run broad memory listings such as `columbus memory list` unless the requester explicitly asks for project-wide memory context.
 
 3. **Targeted drill-down — rare, and never to "confirm a citation."** `search --llm` already returns the exact `path:line`, signature, and why-relevant for every hit — that IS your citation, trust it without opening the symbol. Only `show` a symbol when the _implementation body_ is itself the answer (e.g. "what algorithm does X use?"), and pull a bounded body:
 

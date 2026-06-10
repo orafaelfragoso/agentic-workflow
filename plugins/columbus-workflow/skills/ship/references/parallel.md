@@ -1,50 +1,47 @@
 # Parallel Ship Flow
 
-Use parallel orchestration when independent tasks can run concurrently without sharing mutable files or depending on each other's output.
+Use parallel orchestration when independent pieces of planned work can run concurrently without sharing mutable files or depending on each other's output.
 
 ## When To Use
 
-- Multiple tasks under a story are independent.
+- Multiple steps of a plan (or multiple plans) are independent.
 - Different agents can work on different files, layers, or concerns.
 - Review, security, architecture, or test analysis can run against a stable implementation snapshot.
 - Separate branches or worktrees can isolate risk.
 
 ## Dependency Check
 
-Before parallelizing, classify tasks:
+Before parallelizing, classify each piece of work:
 
 - Independent: can run now.
-- Sequential: depends on another task output.
+- Sequential: depends on another lane's output.
 - Shared-file risk: likely merge conflict.
 - Shared-domain risk: decisions may conflict even if files differ.
 
-Only parallelize independent tasks. Convert uncertain tasks to sequential flow.
+Only parallelize independent work. Convert uncertain pieces to sequential flow.
 
-## Board Setup
+## Lane Setup
 
-Claim each task independently:
+The coordinator owns the lane map. For each lane, state in the session:
+
+- the plan memory id and which of its steps the lane owns
+- the branch or worktree
+- the lane's acceptance criteria
+
+Columbus is not a live board — lane status (in progress, blocked, done) lives in the session. Fold lane assignments into the plan memory body only when they must survive the session:
 
 ```sh
-columbus memory update task task_123 \
-  --status in_progress \
-  --comment "Started parallel ship lane A on branch <branch>."
-
-columbus memory update task task_456 \
-  --status in_progress \
-  --comment "Started parallel ship lane B on branch <branch>."
+columbus memory update mem_12 \
+  --body "<plan body noting: lane A = steps 1-2 on branch feat/a, lane B = step 3 on branch feat/b>"
 ```
-
-Move the parent story or epic to `in_progress` once the first child starts.
 
 ## Branch And Worktree Strategy
 
 Use separate branches or worktrees when agents will edit concurrently:
 
-- one branch per task for independent PR-ready slices
+- one branch per lane for independent PR-ready slices
 - one worktree per branch if simultaneous local edits are needed
 - same branch only for read-only analysis agents or strictly non-overlapping serial edits
-
-Record branch assignment in each task comment.
 
 ## Agent Communication
 
@@ -52,21 +49,19 @@ The active session coordinates all lanes. Agents do not coordinate directly unle
 
 Each lane gets a scoped brief:
 
-- task ID and parent story/epic
+- the plan scope it owns (and the parent plan id)
 - branch or worktree
 - owned files or subsystem
 - do-not-touch areas
-- relevant Columbus memory
+- relevant memory findings (ADRs, documentation)
 - expected output and verification
 
 Agents communicate through:
 
 - returned reports
-- Columbus task comments
-- durable context memory for decisions, patterns, failures, and commands
 - branch names and verification commands
 
-Do not rely on chat-only context for facts another lane needs.
+The coordinator synthesizes lane reports and performs any memory writes. Do not rely on chat-only context for facts another lane needs — put shared facts in the briefs.
 
 ## Parallel Quality Gates
 
@@ -82,7 +77,7 @@ Unsafe parallel gates:
 - two agents editing the same file
 - review of code still changing in another lane
 - security claims before dependency versions are known
-- marking a parent story done before child tasks are merged and verified
+- declaring the plan complete before all lanes are merged and verified
 
 ## Merge And Synthesis
 
@@ -97,20 +92,9 @@ After lanes finish:
 
 ## Closeout
 
-For each completed child task:
+Only after all lanes are merged and verified together:
 
-```sh
-columbus memory update task task_123 \
-  --status done \
-  --comment "Done: lane merged and verified with `<command>`."
-```
-
-If a lane fails or conflicts:
-
-```sh
-columbus memory update task task_123 \
-  --status blocked \
-  --comment "Blocked: merge conflict with task_456 in <file>; needs sequencing decision."
-```
-
-Mark the story or epic done only after all child lanes are complete, merged, and verified together.
+1. Record decisions as `adr` and shipped behavior as `documentation`, anchored with tags, links, and evidence.
+2. Retire the executed plan: `columbus memory update mem_12 --kind documentation`, or `columbus memory remove mem_12`.
+3. If a lane failed or was deferred, update the plan memory body with what remains and why, so the next session can resume.
+4. Capture discovered follow-up work as a new `plan` memory.

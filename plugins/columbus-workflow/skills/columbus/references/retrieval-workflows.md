@@ -28,7 +28,7 @@ Do not drill into every symbol just to confirm citations. The search projection 
 
 ## Dependency Or Blast-Radius Question
 
-Use graph projection when imports, imported-by relationships, or test coverage shape matter.
+Use graph projection when imports, imported-by relationships, or test coverage shape matter. Filter with `--in` (path substring), `--lang`, or `--role impl|test`.
 
 ```sh
 columbus search "payment processing service" --kind code --llm --limit 10
@@ -37,11 +37,12 @@ columbus graphs --llm --in payment --depth 1 --max 50
 
 ## Decision Or Memory Question
 
-Search memory when the answer depends on recorded decisions, patterns, failures, glossary terms, or backlog.
+Search memory when the answer depends on recorded ADRs, plans, or documentation.
 
 ```sh
 columbus search "why local embeddings are used" --kind memory --llm
-columbus show memory mem_123 --llm
+columbus memory list --kind adr --llm
+columbus show memory mem_12 --llm
 ```
 
 ## When To Use Snippets
@@ -60,4 +61,4 @@ Prefer `show symbol` for one chosen implementation over broad snippet searches.
 - Using `--snippets` for broad surveys.
 - Reading raw files after Columbus already returned exact locations.
 - Running `graphs` for simple "where is this?" questions.
-- Loading global memory when task-specific memory search is enough.
+- Listing all memories when a scoped `search --kind memory` or `memory list --kind/--tag` filter is enough.

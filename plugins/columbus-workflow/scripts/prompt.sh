@@ -11,8 +11,8 @@ cat <<'EOF'
 - Never answer from training memory about third-party libraries, frameworks, SDK/API behavior, version compatibility, or CVEs. Verify with Context7 (or WebSearch if Context7 is unavailable), package-manager data, or live advisories before coding against, pinning, or asserting safety of a dependency.
 
 ### Delivery workflow
-- Use the `ship` skill for sprint delivery over Columbus epics, stories, and tasks. Choose direct, sequential, or parallel flow from actual dependencies, and state the branch/worktree strategy before implementation.
-- Keep the board truthful in real time: move a task to `in_progress` before the first edit, add meaningful progress comments, mark `blocked` with the concrete blocker, and mark `done` only after verification has passed.
+- Use the `ship` skill for delivery work scoped by Columbus `plan` memories. Choose direct, sequential, or parallel flow from actual dependencies, and state the branch/worktree strategy before implementation.
+- Track live execution state (in progress, blocked, done) in the session, not in Columbus. At milestones, update the driving `plan` memory so progress survives the session; after verified delivery, record decisions as `adr`, shipped behavior as `documentation`, and re-kind or remove the executed plan.
 - Delegate sparingly: `navigator` for codebase exploration, the most specific delivery agent otherwise. Give each agent a self-contained brief and trust its returned report instead of re-deriving the work.
 
 ### Making changes

@@ -14,7 +14,7 @@ Navigator should:
 
 - search by intent using `columbus search --llm`
 - inspect only the few relevant files or symbols
-- search task-specific memory when decisions matter
+- search memory (`--kind memory`) when recorded ADRs, plans, or documentation matter
 - return one cited report
 - avoid writing memory or coordinating other agents
 
@@ -22,15 +22,13 @@ Navigator should:
 
 In `ship`, the active session coordinates:
 
-1. Load relevant global memory once.
+1. Retrieve relevant ADRs, plans, and documentation once.
 2. Ask `navigator` for code context if needed.
 3. Pass scoped findings to task agents.
 4. Verify deliverables.
-5. Record durable outcomes in Columbus memory.
+5. Record durable outcomes: decisions as `adr`, shipped behavior as `documentation`; re-kind or remove executed `plan` memories.
 
-Task agents should not each reload global memory or repeat broad retrieval.
-
-When task agents work from Columbus epics, stories, or tasks, they should follow `work-item-workflow.md`: move the task to `in_progress` before starting, comment on meaningful progress, mark blockers as `blocked`, and mark work `done` only after verification.
+Task agents should not each re-run broad memory retrieval or repeat wide searches; the coordinator passes each one the scoped context its task needs.
 
 ## Direct Agent Commands
 
@@ -51,4 +49,5 @@ Good Columbus usage keeps context small:
 - Start broad, then drill into one or two targets.
 - Prefer `show symbol` over broad snippets.
 - Use `graphs` for architecture or dependency shape, not every question.
-- Store only durable facts in memory.
+- Store only durable facts in memory, anchored with tags, links, and evidence.
+- Run `columbus memory validate` after refactors that move code memories point at.
