@@ -1,6 +1,6 @@
 ---
 name: mastering-typescript
-description: Master modern, type-safe TypeScript — type-system depth (generics, mapped/conditional types, satisfies), enterprise patterns (Result-style error handling, Zod 4 validation at boundaries), type-safe React, and a current toolchain (Vite 8, Node 24 or Bun, ESLint 10, Vitest 4). Use when building or reviewing type-safe apps, migrating JavaScript to TypeScript, configuring tsconfig/toolchains, or implementing advanced type patterns.
+description: Master modern, type-safe TypeScript — type-system depth (generics, mapped/conditional types, satisfies), enterprise patterns (Result-style error handling, Zod 4 validation at boundaries), type-safe React 19, frameworks (Next.js 16, TanStack Start), and a current toolchain (Vite 8, Node 24 or Bun, ESLint 10 / Biome / oxlint, Prettier, Vitest 4, Turborepo). Use when building or reviewing type-safe apps, migrating JavaScript to TypeScript, configuring tsconfig, linters, formatters, or monorepo tooling, or implementing advanced type patterns.
 ---
 
 # Mastering Modern TypeScript
@@ -27,7 +27,9 @@ Resolve current docs with context7 before pinning a version — this table ages.
 > **Bun if present.** If the repo has a `bun.lock`, `bunfig.toml`, or a Bun-based
 > script setup, use Bun for the runtime and package management (`bun install`,
 > `bun add`, `bun run`, `bunx`). Otherwise default to Node.js 24 LTS + pnpm 11.
-> Bun runs `.ts` directly — no separate transpile step in dev.
+> Bun runs `.ts` directly — no separate transpile step in dev. Node 24 also runs
+> `.ts` directly via type stripping (erasable syntax only — pair with the
+> `erasableSyntaxOnly` compiler flag; see [references/toolchain.md](references/toolchain.md)).
 
 ## Quick start
 
@@ -58,14 +60,6 @@ Then enable strict checking (see [assets/tsconfig-template.json](assets/tsconfig
 }
 ```
 
-## When to use this skill
-
-- Building type-safe React or Node apps and want the patterns to be correct, not just compiling.
-- Migrating a JavaScript codebase to TypeScript incrementally.
-- Implementing advanced types (generics, mapped/conditional types, template literals).
-- Configuring a modern toolchain (Vite, pnpm, ESLint flat config, Vitest).
-- Designing API contracts validated at runtime with Zod 4.
-
 ## Project setup checklist
 
 ```
@@ -89,16 +83,21 @@ Then enable strict checking (see [assets/tsconfig-template.json](assets/tsconfig
 ### Discriminated union + exhaustiveness
 
 ```typescript
-type Result<T, E = string> = { ok: true; value: T } | { ok: false; error: E };
+type PaymentEvent =
+  | { kind: "authorized"; amount: number }
+  | { kind: "captured"; amount: number }
+  | { kind: "failed"; reason: string };
 
-function unwrap<T>(r: Result<T>): T {
-  switch (r.ok) {
-    case true:
-      return r.value;
-    case false:
-      throw new Error(r.error);
+function describe(e: PaymentEvent): string {
+  switch (e.kind) {
+    case "authorized":
+      return `authorized ${e.amount}`;
+    case "captured":
+      return `captured ${e.amount}`;
+    case "failed":
+      return e.reason;
     default:
-      return assertNever(r);
+      return assertNever(e); // compile error when a variant is missed
   }
 }
 
@@ -165,21 +164,23 @@ See [references/enterprise-patterns.md](references/enterprise-patterns.md) for t
 
 ## Reference files
 
-- [references/type-system.md](references/type-system.md) — annotations, interfaces vs types, unions, narrowing, special types
-- [references/generics.md](references/generics.md) — constraints, conditional types, `infer`, mapped types, variance
-- [references/enterprise-patterns.md](references/enterprise-patterns.md) — error handling, Zod validation, branded types, DI, migration
-- [references/react-integration.md](references/react-integration.md) — typed components, hooks, events, generic components (React 19)
-- [references/toolchain.md](references/toolchain.md) — Vite 8, Node 24 / Bun, Vitest 4, build & CI
+Read the one whose topic matches the task — each file repeats its load condition at the top:
+
+- [references/type-system.md](references/type-system.md) — read for annotations, `interface` vs `type`, unions, narrowing, `unknown`/`never`/`void`
+- [references/generics.md](references/generics.md) — read for constraints, conditional types, `infer`, mapped types, variance
+- [references/enterprise-patterns.md](references/enterprise-patterns.md) — read for error handling, Zod validation, branded types, DI, JS→TS migration
+- [references/react-integration.md](references/react-integration.md) — read when typing React components, hooks, events, refs (React 19)
+- [references/toolchain.md](references/toolchain.md) — read for project setup, tsconfig, Vite 8, Node 24 / Bun, Vitest 4, CI
 
 ### Frameworks & tooling integrations
 
-- [references/nextjs-integration.md](references/nextjs-integration.md) — Next.js 16 (App Router, boundaries, linting)
-- [references/tanstack-start-integration.md](references/tanstack-start-integration.md) — TanStack Start (typed routing, server functions)
-- [references/eslint-integration.md](references/eslint-integration.md) — ESLint 10 flat config, type-aware rules
-- [references/biome-integration.md](references/biome-integration.md) — Biome lint + format
-- [references/prettier-integration.md](references/prettier-integration.md) — Prettier formatting
-- [references/oxc-integration.md](references/oxc-integration.md) — oxlint / oxfmt (fastest)
-- [references/turborepo-integration.md](references/turborepo-integration.md) — monorepo task running & caching
+- [references/nextjs-integration.md](references/nextjs-integration.md) — read for Next.js 16 (App Router, boundaries, linting)
+- [references/tanstack-start-integration.md](references/tanstack-start-integration.md) — read for TanStack Start (typed routing, server functions)
+- [references/eslint-integration.md](references/eslint-integration.md) — read for ESLint 10 flat config, type-aware rules
+- [references/biome-integration.md](references/biome-integration.md) — read for Biome lint + format
+- [references/prettier-integration.md](references/prettier-integration.md) — read for Prettier formatting
+- [references/oxc-integration.md](references/oxc-integration.md) — read for oxlint / oxfmt (fastest lint/format)
+- [references/turborepo-integration.md](references/turborepo-integration.md) — read for monorepo task running & caching
 
 ## Assets
 
@@ -191,3 +192,13 @@ Copy these into your project root and adjust:
 - [assets/prettierrc-template.json](assets/prettierrc-template.json) — `.prettierrc.json`
 - [assets/oxlintrc-template.json](assets/oxlintrc-template.json) — `.oxlintrc.json`
 - [assets/turbo-template.json](assets/turbo-template.json) — `turbo.json`
+
+## Validation
+
+Before calling TypeScript work done:
+
+- [ ] `tsc --noEmit` passes with `strict` and `noUncheckedIndexedAccess` on
+- [ ] No new `any`, `as` casts, or `@ts-expect-error` without a justifying comment
+- [ ] External data (HTTP, env, files, storage) is parsed with Zod at the boundary
+- [ ] Lint and tests pass (`eslint .` / `biome check`, `vitest run`)
+- [ ] Any newly pinned tool versions were verified against current docs (context7), not this skill's table

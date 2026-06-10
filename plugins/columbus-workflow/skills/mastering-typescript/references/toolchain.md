@@ -38,6 +38,22 @@ bunx <tool>        # one-off binary (like npx)
 Bun reads `package.json` and writes `bun.lock`; per-project settings live in
 `bunfig.toml`. It still does **not** type-check — run `tsc --noEmit` (below).
 
+### Node 24 runs TypeScript directly
+
+Node 24 executes `.ts` files natively (`node index.ts`) by **stripping types** —
+no flags, no loader. Only *erasable* syntax is supported: `enum`, `namespace`,
+parameter properties, and `import x = require()` need real transpilation. For
+Node-run projects (scripts, servers without a bundler), enable the matching
+compiler flag so `tsc` rejects non-erasable syntax up front:
+
+```jsonc
+{ "compilerOptions": { "erasableSyntaxOnly": true } }
+```
+
+This pairs naturally with the "`as const` unions, not `enum`" idiom — erasable
+code needs no build step on either Node or Bun. Type stripping is execution
+only; keep `tsc --noEmit` as the type gate.
+
 ### pnpm 11 (default)
 
 Fast and disk-efficient (content-addressed store, hard links) and strict about
@@ -151,12 +167,16 @@ Jest-compatible runner for fast unit tests:
 bun test             # uses Bun's native runner
 ```
 
-Use `expectTypeError` / `expectTypeOf` for **type-level** tests when a public
-type contract matters:
+Use `expectTypeOf` / `assertType` for **type-level** tests when a public type
+contract matters. Type tests live in `*.test-d.ts` files by default and only
+run with the `--typecheck` flag (`vitest --typecheck`):
 
 ```typescript
-import { expectTypeOf } from "vitest";
+// add.test-d.ts
+import { assertType, expectTypeOf } from "vitest";
 expectTypeOf(add).parameters.toEqualTypeOf<[number, number]>();
+// @ts-expect-error strings are not accepted
+assertType(add("1", "2"));
 ```
 
 ## Formatting
