@@ -9,11 +9,12 @@ You are a **senior advisor, not an implementer**. Your job is to deeply understa
 
 The economics of this skill: an expensive, high-ceiling model does the part where intelligence compounds (understanding, judging, specifying). Cheaper models do the execution. The plan is the product — its quality determines whether the executor succeeds.
 
-Plans, the audit record, and decisions all live in **Columbus memory**, not in repo files:
+Plans and ratified decisions live in **Columbus memory**, not in repo files:
 
 - each implementation plan → a `plan` memory (anchored to code with `--link` and `--evidence`),
-- the audit summary — findings table, execution order, dependencies, considered-and-rejected list → one `documentation` memory,
 - durable judgment calls the user ratifies ("not worth doing because X", "take the project toward Y") → `adr` memories.
+
+The audit summary itself — findings table, execution order, dependencies, considered-and-rejected list — is **not** recorded as a memory: deliver it in the final report. Cross-plan ordering lives in each plan's "Depends on" field.
 
 **Precondition**: Columbus must be installed and indexed. Check with `columbus doctor`; if the project isn't set up, stop and ask the user to run `columbus install` first — don't run it yourself, and don't fall back to writing plan files. If the index is stale, `columbus reindex --changed` is fine (it writes only Columbus's own database, never the working tree).
 
@@ -75,7 +76,7 @@ Every finding needs: evidence (`file:line` references), impact, effort estimate 
 
 ### Phase 3 — Vet, prioritize, confirm
 
-**Vet before presenting — agents over-report.** For every finding that will make the table, open the cited code yourself and confirm it. Expect three failure classes: **by-design behavior** reported as a bug or vulnerability (e.g. honoring `https_proxy` flagged as SSRF — it's the standard proxy convention); **mis-attributed evidence** (real finding, wrong file or line); and duplicates across agents. Downgrade, correct, or reject accordingly — rejections go into the audit-summary memory's "considered and rejected" section (Phase 4) so they aren't re-audited next run.
+**Vet before presenting — agents over-report.** For every finding that will make the table, open the cited code yourself and confirm it. Expect three failure classes: **by-design behavior** reported as a bug or vulnerability (e.g. honoring `https_proxy` flagged as SSRF — it's the standard proxy convention); **mis-attributed evidence** (real finding, wrong file or line); and duplicates across agents. Downgrade, correct, or reject accordingly — list rejections in the final report's "considered and rejected" section, and when the user ratifies one as a durable judgment, record it as an `adr` so it isn't re-audited next run.
 
 Present the vetted findings table to the user, ordered by leverage (impact ÷ effort, weighted by confidence):
 
@@ -85,7 +86,7 @@ Present **direction findings separately**, after the table — they're options f
 
 Then ask which findings to turn into plans (default suggestion: the top 3–5 plus anything they flag). Also surface **dependency ordering** — e.g. "characterization tests for module X must land before the refactor of X."
 
-Wait for the selection. Do not write 30 plans nobody asked for. If running non-interactively (no user available to choose), write plans for the top 3–5 by leverage and record that default in the audit-summary memory.
+Wait for the selection. Do not write 30 plans nobody asked for. If running non-interactively (no user available to choose), write plans for the top 3–5 by leverage and state that default in the final report.
 
 When the user makes a durable judgment call — "not worth doing because X", "we're taking the project toward Y" — record it as an `adr` memory with the rationale, so future runs (and other agents) inherit the decision.
 
@@ -116,7 +117,7 @@ Write each plan **for the weakest plausible executor**. That means:
 - A maintenance note (what future changes will interact with this, what to watch in review).
 - Escape hatches: "if X turns out to be true, STOP and report back instead of improvising."
 
-Finish by writing (or updating) the **audit-summary `documentation` memory** — tagged `improve`, titled "Improve audit — <date>": the recommended execution order with memory ids, dependencies between plans, and the considered-and-rejected list. See the template's index section. Then run `columbus memory validate` to confirm every link and evidence range you recorded resolves.
+Finish with the **final report in the session** (never a memory): the recommended execution order with memory ids, dependencies between plans, and the considered-and-rejected list. Then run `columbus memory validate` to confirm every link and evidence range you recorded resolves.
 
 ## Invocation variants
 

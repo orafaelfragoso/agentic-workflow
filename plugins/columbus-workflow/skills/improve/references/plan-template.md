@@ -168,26 +168,23 @@ For the human/agent who owns this code after the change lands:
 
 ---
 
-## The audit-summary memory
+## The audit report
 
-Written once by the advisor after all plans, updated as plans progress. One `documentation` memory, tagged `improve`, titled "Improve audit — <YYYY-MM-DD>":
+The audit summary is delivered in the session's final report — it is **never recorded as a memory**. After writing the plans, close the run with:
 
 ```markdown
 # Improve audit — <date>
 
 Audited at commit `<short SHA>`. Execute plans in the order below unless
 dependencies say otherwise. Each executor: read the plan fully before
-starting and honor its STOP conditions. The plan owner updates statuses here
-via `columbus memory update`.
+starting and honor its STOP conditions.
 
-## Execution order & status
+## Execution order
 
-| Plan   | Title | Priority | Effort | Depends on | Status |
-| ------ | ----- | -------- | ------ | ---------- | ------ |
-| mem_12 | ...   | P1       | S      | —          | TODO   |
-| mem_13 | ...   | P1       | M      | mem_12     | TODO   |
-
-Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale — finding fixed independently or approach abandoned)
+| Plan   | Title | Priority | Effort | Depends on |
+| ------ | ----- | -------- | ------ | ---------- |
+| mem_12 | ...   | P1       | S      | —          |
+| mem_13 | ...   | P1       | M      | mem_12     |
 
 ## Dependency notes
 
@@ -195,14 +192,14 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 
 ## Not audited
 
-- <what this run skipped, and why> (so the next run knows where to look).
+- <what this run skipped, and why>.
 
 ## Findings considered and rejected
 
-- <finding>: not worth doing because <one line>. (So nobody re-audits it.)
+- <finding>: not worth doing because <one line>.
 ```
 
-If an audit-summary memory already exists from a previous run, update it (append the new run's section or refresh rows) rather than creating a parallel one — one living summary beats an archaeology dig.
+Everything that must outlive the session lives elsewhere: ordering in each plan's "Depends on" field, blockers and progress in the plan bodies (`columbus memory update`), and rejections the user ratifies as durable judgments in `adr` memories.
 
 ## Quality bar — check before finishing each plan
 

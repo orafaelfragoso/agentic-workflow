@@ -8,29 +8,28 @@ The founding rule survives unchanged: **the advisor never edits source code.** R
 
 Columbus's memory model is the guide: plans are intended future work, and **plans age out — re-kind or remove them when they're no longer future work.**
 
-- **Written** → `columbus memory add plan`, tagged `improve` + category, anchored with links and evidence. Row added to the audit-summary memory with status TODO.
-- **Executed and verified** → re-kind it: `columbus memory update mem_NN --kind documentation`, and rewrite the body from "what to do" into "how it now works" (keep the why; drop the steps; refresh links/evidence to the landed code). Mark DONE in the audit summary. If nothing durable is worth keeping, `columbus memory remove mem_NN` and record DONE in the summary instead.
-- **Blocked** → update the body with the blocker and what was learned; mark BLOCKED (one-line reason) in the audit summary.
-- **Rejected / abandoned** → `columbus memory remove mem_NN`; record the rationale in the audit summary's "considered and rejected" section. If the rejection is a durable judgment ("we will not migrate to X because Y"), record it as an `adr` so future audits inherit it.
+- **Written** → `columbus memory add plan`, tagged `improve` + category, anchored with links and evidence.
+- **Executed and verified** → re-kind it: `columbus memory update mem_NN --kind documentation`, and rewrite the body from "what to do" into "how it now works" (keep the why; drop the steps; refresh links/evidence to the landed code). If nothing durable is worth keeping, `columbus memory remove mem_NN` instead.
+- **Blocked** → update the body with the blocker and what was learned — a one-line `BLOCKED: <reason>` near the top of the body keeps it visible to the next session.
+- **Rejected / abandoned** → `columbus memory remove mem_NN`, noting the rationale in the session report. If the rejection is a durable judgment ("we will not migrate to X because Y"), record it as an `adr` so future audits inherit it.
 
 ## `reconcile` — the session-start sweep
 
-Read the audit-summary memory and every plan memory:
+Read every plan memory:
 
 ```sh
-columbus search "improve audit" --kind memory --llm   # find the summary
 columbus memory list --kind plan --tag improve --llm
 columbus memory validate                              # evidence drift, dead links
 ```
 
-Then per status in the summary:
+Then judge each plan's state from its body (executors and the ship workflow note progress and blockers there) and from the code itself:
 
-- **DONE** — spot-check that the done criteria still hold on the current HEAD (cheap ones only). If the plan memory wasn't re-kinded when it shipped, do it now (see lifecycle above).
-- **BLOCKED** — read the reason. Investigate the underlying obstacle in the codebase. Either rewrite the plan around it (`memory update` with a refreshed body and new `Planned at` SHA) or remove it and record REJECTED with one line of rationale.
-- **IN PROGRESS** (stale) — flag it to the user; an executor probably died mid-run. Check for a leftover branch or worktree if one was used.
-- **TODO** — run the plan's drift check (`git diff --stat <planned-at SHA>..HEAD -- <in-scope paths>`) and heed `memory validate`'s drift report. If drifted: re-verify the finding still exists (it may have been fixed in passing), then refresh the "Current state" excerpts, evidence ranges, and `Planned at` SHA via `memory update`. If the finding is gone, remove the plan and record REJECTED ("fixed independently") in the summary.
+- **Shipped** — the plan's done criteria hold on the current HEAD (spot-check the cheap ones). If the plan memory wasn't re-kinded when it shipped, do it now (see lifecycle above).
+- **Blocked** (body carries a blocker note) — read the reason. Investigate the underlying obstacle in the codebase. Either rewrite the plan around it (`memory update` with a refreshed body and new `Planned at` SHA) or remove it and note the rejection in the report (record an `adr` if it's a durable judgment).
+- **Stale in-progress** (body notes started work but nothing landed) — flag it to the user; an executor probably died mid-run. Check for a leftover branch or worktree if one was used.
+- **Still TODO** — run the plan's drift check (`git diff --stat <planned-at SHA>..HEAD -- <in-scope paths>`) and heed `memory validate`'s drift report. If drifted: re-verify the finding still exists (it may have been fixed in passing), then refresh the "Current state" excerpts, evidence ranges, and `Planned at` SHA via `memory update`. If the finding is gone, remove the plan and note "fixed independently" in the report.
 
-Finish by updating the audit-summary memory's status table, then report: what's verified done, what was refreshed, what's rejected, and what's executable right now.
+Finish by reporting: what's verified done, what was refreshed, what's rejected, and what's executable right now.
 
 ## Handing plans to executors
 
