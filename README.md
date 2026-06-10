@@ -76,7 +76,6 @@ The bundled agents are flat specialists. `ship` coordinates the flow; agents do 
 The agents pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP tool ids (`mcp__context7__*`), and use agent-teams tools (`SendMessage`, `EnterWorktree`, `ExitWorktree`) that require `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — set in the local config template.
 
 - `navigator`: on-demand codebase explorer using Columbus.
-- `sprint-planner`: turns plan memories into an execution plan with dependencies and branch/worktree strategy.
 - `delivery-engineer`: implements one scoped piece of planned work.
 - `test-engineer`: designs and runs verification.
 - `quality-reviewer`: reviews correctness, maintainability, regression risk, and fit with the planned scope.
@@ -96,7 +95,7 @@ The agents pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP too
 ## Bundled Components
 
 - Skills: `ship`, `columbus`, `commit`, `interview`, `triage`, `improve`, `setup`, `mastering-golang`, `mastering-typescript`, `mastering-design`, `write-a-skill`, `write-an-agent`
-- Agents: `navigator`, `sprint-planner`, `delivery-engineer`, `test-engineer`, `quality-reviewer`, `security-analyst`, `architecture-reviewer`, `release-coordinator`
+- Agents: `navigator`, `delivery-engineer`, `test-engineer`, `quality-reviewer`, `security-analyst`, `architecture-reviewer`, `release-coordinator`
 - Scripts: `prompt.sh`, `rtk-rewrite.sh`, `statusline-command.sh`
 - Hooks: `SessionStart` context injection and `PreToolUse` RTK bash rewrite
 - Output style: `Caveman`

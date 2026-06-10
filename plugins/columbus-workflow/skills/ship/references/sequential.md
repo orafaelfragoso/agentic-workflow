@@ -13,7 +13,7 @@ Use sequential orchestration when work must pass through ordered stages or one a
 
 Each stage names the agent that runs it:
 
-1. Planning (coordinator, or `sprint-planner` for multi-plan scoping): clarify acceptance criteria, dependencies, branch strategy, and the plan-memory scope.
+1. Planning (coordinator): clarify acceptance criteria, dependencies, branch strategy, and the plan-memory scope.
 2. Exploration (`navigator`): code locations, graph shape, and recorded decisions.
 3. Implementation (`delivery-engineer`): the minimal scoped change on the stated branch or worktree.
 4. Testing (`test-engineer`): add or run behavior-focused tests.

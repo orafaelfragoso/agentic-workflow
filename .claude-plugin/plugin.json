@@ -23,7 +23,6 @@
   "skills": "./plugins/columbus-workflow/skills/",
   "agents": [
     "./plugins/columbus-workflow/agents/navigator.md",
-    "./plugins/columbus-workflow/agents/sprint-planner.md",
     "./plugins/columbus-workflow/agents/delivery-engineer.md",
     "./plugins/columbus-workflow/agents/test-engineer.md",
     "./plugins/columbus-workflow/agents/quality-reviewer.md",
