@@ -1,6 +1,6 @@
 # Sequential Ship Flow
 
-Use sequential orchestration when work must pass through ordered stages or one agent's output becomes the next agent's input.
+Use sequential orchestration when work must pass through ordered stages or one agent's output becomes the next agent's input. Every stage after planning is a deployed agent — the coordinator runs the gates between stages, never the stages themselves.
 
 ## When To Use
 
@@ -11,14 +11,18 @@ Use sequential orchestration when work must pass through ordered stages or one a
 
 ## Standard Stage Order
 
-1. Planning: clarify acceptance criteria, dependencies, branch strategy, and the plan-memory scope.
-2. Exploration: use `navigator` for code locations, graph shape, and recorded decisions.
-3. Implementation: make the minimal scoped change.
-4. Testing: add or run behavior-focused tests.
-5. Quality review: check correctness, maintainability, naming, and regression risk.
-6. Security review: check CVEs, dependency risk, auth, permissions, secrets, injection, and data handling.
-7. Architecture review: check design patterns, boundaries, coupling, and long-term maintainability.
-8. Release readiness: summarize verification, branch/PR state, memory updates, and follow-ups.
+Each stage names the agent that runs it:
+
+1. Planning (coordinator, or `sprint-planner` for multi-plan scoping): clarify acceptance criteria, dependencies, branch strategy, and the plan-memory scope.
+2. Exploration (`navigator`): code locations, graph shape, and recorded decisions.
+3. Implementation (`delivery-engineer`): the minimal scoped change on the stated branch or worktree.
+4. Testing (`test-engineer`): add or run behavior-focused tests.
+5. Quality review (`quality-reviewer`): correctness, maintainability, naming, and regression risk.
+6. Security review (`security-analyst`): CVEs, dependency risk, auth, permissions, secrets, injection, and data handling.
+7. Architecture review (`architecture-reviewer`): design patterns, boundaries, coupling, and long-term maintainability.
+8. Release readiness (`release-coordinator`): verification summary, branch/PR state, memory updates, and follow-ups.
+
+A failed gate sends the findings back to the stage's agent as a new scoped brief (max two revision rounds, then record the blocker and stop). The coordinator never absorbs a failed stage's work itself.
 
 ## Plan Protocol
 

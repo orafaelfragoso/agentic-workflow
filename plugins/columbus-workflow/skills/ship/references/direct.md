@@ -1,13 +1,13 @@
 # Direct Ship Flow
 
-Use direct orchestration when one agent or the active session can complete a single scoped piece of work without parallel handoffs.
+Use direct orchestration when one delivery lane can complete a single scoped piece of work without parallel handoffs. Direct means **one lane**, not "the coordinator does it" — the agentic loop still runs, with one agent per stage. The coordinator never edits files.
 
 ## When To Use
 
 - The work touches a narrow area.
 - No other work depends on a partial output.
 - No expected merge conflicts.
-- The same branch is acceptable.
+- A single branch is acceptable.
 
 ## Plan Setup
 
@@ -18,27 +18,36 @@ Use direct orchestration when one agent or the active session can complete a sin
    columbus show memory mem_12 --llm
    ```
 
-2. Confirm the scope before implementation: the step being executed, its acceptance criteria, and what is out of scope. Track "in progress" in the session — Columbus is not a live board.
+2. Confirm the scope before deploying anyone: the step being executed, its acceptance criteria, and what is out of scope. Track "in progress" in the session — Columbus is not a live board.
 
 3. If the plan memory is stale against the code it references, run `columbus memory validate` and reconcile before starting.
 
-## Context And Communication
+## The Loop, One Lane
 
-- Use the plan memory's links and evidence plus relevant ADRs/documentation already retrieved by the session.
-- Dispatch `navigator` only if code location or dependency shape is unclear.
-- If a specialist agent is used, brief it with the plan scope, acceptance criteria, files, branch strategy, and expected return format.
-- Record meaningful discoveries in the plan memory body, not chat-only notes:
+Run the stages in order; each is a deployed agent with a scoped brief:
 
-  ```sh
-  columbus memory update mem_12 --body "<plan body with progress notes and discoveries>"
-  ```
+1. **Explore** — `navigator`, only if code locations or dependency shape are unclear (the plan memory's links and evidence often already pin them).
+2. **Implement** — `delivery-engineer` on the lane's branch. The brief carries: plan memory id and the relevant body excerpt, acceptance criteria, files in scope, branch name, constraints, and the expected report format.
+3. **Verify** — `test-engineer` runs and extends verification against the acceptance criteria. May be combined with stage 2 only when the plan explicitly includes the test work in the delivery-engineer's scope.
+4. **Review** — `quality-reviewer` on the diff. Add `security-analyst` if dependencies, auth, permissions, secrets, data handling, or network exposure changed; add `architecture-reviewer` if abstractions, boundaries, or shared flows changed.
+5. **Close** — the coordinator checks the gates, then writes memory (below).
+
+If a review gate fails, send the findings back to the `delivery-engineer` as a new scoped brief. Max two revision rounds; then stop, record the blocker in the plan memory, and surface to the user.
+
+The coordinator's own contributions are limited to: reading reports and diffs, running read-only checks to confirm gate claims, branch management, and memory writes. Record meaningful discoveries in the plan memory body, not chat-only notes:
+
+```sh
+columbus memory update mem_12 --body "<plan body with progress notes and discoveries>"
+```
 
 ## Branch Strategy
 
-Prefer the current branch when:
+State the strategy before deploying the implementing agent.
+
+Use the current branch when:
 
 - the work is narrow
-- no other agent is editing the same area
+- nothing else is editing the same area
 - the user did not ask for separate branches
 
 Create a dedicated branch when:
@@ -47,18 +56,18 @@ Create a dedicated branch when:
 - the user asks for a PR-ready slice
 - the change is risky
 
-Use a worktree only when concurrent work must be isolated.
+Use a worktree (`isolation: "worktree"` on the agent) when the agent's edits must not touch the session's checkout — e.g. risky changes, or the user keeps working locally. With `worktree.baseRef` set to `"head"`, the agent's worktree branches from local HEAD and sees in-progress work.
 
 ## Delivery Gates
 
-Run these in order:
+Run these in order, each backed by an agent report:
 
-1. Acceptance criteria check.
-2. Implementation.
-3. Tests or explicit verification.
-4. Code quality review.
-5. Security/CVE check if dependencies, auth, permissions, secrets, data handling, or network exposure changed.
-6. Architecture/design-pattern check if abstractions, boundaries, or shared flows changed.
+1. Acceptance criteria check (coordinator, against the plan memory).
+2. Implementation (`delivery-engineer` report + diff).
+3. Tests or explicit verification (`test-engineer` report).
+4. Code quality review (`quality-reviewer` report).
+5. Security/CVE check (`security-analyst`) if dependencies, auth, permissions, secrets, data handling, or network exposure changed.
+6. Architecture/design-pattern check (`architecture-reviewer`) if abstractions, boundaries, or shared flows changed.
 
 ## Closeout
 

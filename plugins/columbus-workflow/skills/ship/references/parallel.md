@@ -1,6 +1,6 @@
 # Parallel Ship Flow
 
-Use parallel orchestration when independent pieces of planned work can run concurrently without sharing mutable files or depending on each other's output.
+Use parallel orchestration when independent pieces of planned work can run concurrently without sharing mutable files or depending on each other's output. Each lane is its own run of the agentic loop — a `delivery-engineer` (plus its verify/review agents) in an isolated worktree or branch. The coordinator owns the lane map, the merge, and memory; it implements nothing.
 
 ## When To Use
 
@@ -39,8 +39,8 @@ columbus memory update mem_12 \
 
 Use separate branches or worktrees when agents will edit concurrently:
 
+- one worktree per editing lane (deploy the lane's agents with `isolation: "worktree"`) — the default for parallel implementation; with `worktree.baseRef` set to `"head"` each worktree branches from local HEAD and sees in-progress work
 - one branch per lane for independent PR-ready slices
-- one worktree per branch if simultaneous local edits are needed
 - same branch only for read-only analysis agents or strictly non-overlapping serial edits
 
 ## Agent Communication
@@ -85,10 +85,10 @@ After lanes finish:
 
 1. Collect each lane report.
 2. Check branch status and diffs.
-3. Merge or apply changes one lane at a time.
-4. Resolve conflicts in the coordinator.
-5. Run combined verification.
-6. Run final quality, security, and architecture checks on the merged result.
+3. Merge or apply changes one lane at a time (git mechanics are the coordinator's).
+4. Resolve code conflicts by dispatching a `delivery-engineer` briefed with both lanes' reports — the coordinator does not hand-edit conflicting source.
+5. Run combined verification (`test-engineer` on the merged result).
+6. Run final quality, security, and architecture gates on the merged result with the matching review agents.
 
 ## Closeout
 

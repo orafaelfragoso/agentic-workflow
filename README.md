@@ -49,7 +49,7 @@ Add new agents to the `agents` list in `.claude-plugin/plugin.json`.
 
 This plugin adapts sprint delivery around Columbus instead of a report registry:
 
-- The active session is the coordinator. It retrieves the relevant Columbus memory (ADRs, plans, documentation) once and passes scoped context to agents.
+- The active session is the coordinator and never implements. All code, test, and review work is done by deployed task agents through an explore → implement → verify → review → close loop; the coordinator scopes briefs, manages branches/worktrees, judges gates, and writes memory.
 - `ship` executes Columbus `plan` memories through direct, sequential, or parallel delivery flows. Live execution state lives in the session; Columbus holds the durable record.
 - `navigator` is the on-demand codebase explorer. It can be invoked directly or by orchestration, uses Columbus to locate relevant code, and returns one cited report.
 - Specialist agents cover planning, implementation, tests, quality review, security/CVE review, architecture review, and release readiness.
