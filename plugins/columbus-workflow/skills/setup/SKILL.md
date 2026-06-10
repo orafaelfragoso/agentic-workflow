@@ -1,6 +1,6 @@
 ---
 name: setup
-description: Sets up the Columbus Workflow plugin end to end — checks dependencies (jq, the Columbus CLI), applies the plugin's recommended Claude Code settings (env tweaks, output style, enabled plugins, statusline) as the user's global defaults, installs the bundled statusline script, and offers Columbus project indexing. Use when the user says "setup", "set up the plugin", "setting sail", "set sail", asks to apply or install the plugin's Claude settings as their defaults, or wants the statusline script set up.
+description: Sets up the Columbus Workflow plugin end to end — checks dependencies (jq, the Columbus CLI, rtk), applies the plugin's recommended Claude Code settings (env tweaks, output style, enabled plugins, statusline) as the user's global defaults, installs the bundled statusline script, and offers Columbus project indexing. Use when the user says "setup", "set up the plugin", "setting sail", "set sail", asks to apply or install the plugin's Claude settings as their defaults, or wants the statusline script set up.
 ---
 
 # Setup
@@ -15,7 +15,7 @@ Set up everything the Columbus Workflow plugin needs — global Claude Code defa
 
 ## Workflow
 
-1. Check dependencies: `jq` (required by the merge script) and the `columbus` CLI (required by this plugin's skills and agents — check with `command -v columbus`). If `columbus` is missing, tell the user the plugin's retrieval and memory features won't work until it's installed, and ask whether to continue with settings-only setup.
+1. Check dependencies: `jq` (required by the merge script), the `columbus` CLI (required by this plugin's skills and agents), and `rtk` (required by the PreToolUse rewrite hook) — check each with `command -v`. If `columbus` is missing, tell the user the plugin's retrieval and memory features won't work until it's installed, and ask whether to continue with settings-only setup. If `rtk` is missing, tell the user the bash-rewrite hook will warn and pass commands through unchanged until rtk is installed (https://github.com/rtk-ai/rtk#installation).
 2. Preview the result: run `scripts/setup-settings.sh --dry-run` and compare it against the user's current global `settings.json` (default `~/.claude/settings.json`, or `$CLAUDE_CONFIG_DIR/settings.json` if that variable is set).
 3. Report which existing keys would change value. If any would be overwritten, summarize them and confirm with the user before proceeding. A fresh install with no existing settings file needs no confirmation.
 4. Run `scripts/setup-settings.sh`. It backs up any existing settings file to `<target>.bak.<timestamp>` before writing and prints the backup, settings, and statusline paths.
@@ -32,6 +32,7 @@ Set up everything the Columbus Workflow plugin needs — global Claude Code defa
 - If the existing settings file is invalid JSON, the script exits with code 2 and touches nothing. Show the user the parse problem and let them decide how to fix it; do not delete or regenerate their file unprompted.
 - If `jq` is missing, ask the user to install it (for example `brew install jq`) rather than reimplementing the merge by hand.
 - If `columbus` is missing, never skip silently — say what won't work and let the user choose between installing it first and settings-only setup.
+- If `rtk` is missing, setup can proceed (the hook degrades gracefully), but report it so the user knows the token-saving rewrites are off.
 - `columbus install` writes a config file and database into the project; always confirm before running it.
 - To write somewhere other than the global settings file, pass the target path as the script's argument.
 
@@ -43,3 +44,4 @@ Set up everything the Columbus Workflow plugin needs — global Claude Code defa
 - [ ] `statusLine.command` points at an executable copy of the statusline script.
 - [ ] Statusline script produces output when fed `{}` on stdin.
 - [ ] `columbus doctor` reports a healthy project, or the user explicitly deferred Columbus setup.
+- [ ] `rtk` is installed, or the user was told the rewrite hook is inactive without it.
