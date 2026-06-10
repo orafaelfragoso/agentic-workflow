@@ -95,16 +95,17 @@ The agents pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP too
 
 ## Bundled Components
 
-- Skills: `ship`, `columbus`, `commit`, `interview`, `triage`, `improve`, `setting-sail`, `mastering-golang`, `mastering-typescript`, `write-a-skill`, `write-an-agent`
+- Skills: `ship`, `columbus`, `commit`, `interview`, `triage`, `improve`, `setup`, `mastering-golang`, `mastering-typescript`, `write-a-skill`, `write-an-agent`
 - Agents: `navigator`, `sprint-planner`, `delivery-engineer`, `test-engineer`, `quality-reviewer`, `security-analyst`, `architecture-reviewer`, `release-coordinator`
 - Scripts: `prompt.sh`, `rtk-rewrite.sh`, `statusline-command.sh`
 - Hooks: `SessionStart` context injection and `PreToolUse` RTK bash rewrite
 - Output style: `Caveman`
 - Local config template: `plugins/columbus-workflow/config/claude/settings.local.example.json`
 
-The `setting-sail` skill applies the recommended settings as your global Claude Code defaults and
-installs the bundled statusline script (it runs
-`plugins/columbus-workflow/skills/setting-sail/scripts/setup-settings.sh`). When copying the local
+The `setup` skill sets up the plugin end to end: it checks for `jq` and the Columbus CLI, applies
+the recommended settings as your global Claude Code defaults, installs the bundled statusline
+script (via `plugins/columbus-workflow/skills/setup/scripts/setup-settings.sh`), and offers to
+index the current project with `columbus install`. When copying the local
 config template manually instead, replace the `statusLine.command` placeholder with the absolute
 path to `plugins/columbus-workflow/scripts/statusline-command.sh` (settings files do not expand
 `${CLAUDE_PLUGIN_ROOT}`).
