@@ -2,7 +2,7 @@
 
 > **Load when:** the task uses the Motion library (formerly Framer Motion) —
 > enter/exit animations, layout animations, gestures, scroll-linked effects, or
-> orchestrated sequences in React. For *whether and how much* to animate, read
+> orchestrated sequences in React. For _whether and how much_ to animate, read
 > [micro-interactions.md](micro-interactions.md) first.
 
 Motion is the successor to Framer Motion. React API imports from
@@ -22,7 +22,7 @@ import { motion } from "motion/react";
 ```
 
 - `initial` → `animate` runs on mount; setting `animate` to new values animates
-  on re-render. State *is* the animation target — no imperative play() calls.
+  on re-render. State _is_ the animation target — no imperative play() calls.
 - Transforms and opacity run on the compositor; stick to them
   (`x`, `y`, `scale`, `rotate`, `opacity`) for anything frequent.
 - Springs for movement, durations for fades:
@@ -128,14 +128,14 @@ opacity fades, drop movement/scale/parallax. This is a requirement, not polish.
 
 ## Dos and don'ts
 
-| Do                                                       | Don't                                                     |
-| --------------------------------------------------------- | ---------------------------------------------------------- |
-| CSS transitions for simple hover/fade; Motion for exit/layout/orchestration | Pull Motion into a component for a one-property hover     |
-| Animate `x`/`y`/`scale`/`opacity`                          | Animate `width`/`height`/`top`/`left` (use `layout`)        |
-| Springs for interruptible movement                         | Long duration+ease on things users interrupt               |
-| Stable `key`s under `AnimatePresence`                      | Index keys that break exit tracking                         |
-| `useReducedMotion` fallbacks                               | Unconditional motion                                        |
-| `layoutId` for shared-element morphs                       | Hand-synced absolute-position clones                        |
+| Do                                                                          | Don't                                                 |
+| --------------------------------------------------------------------------- | ----------------------------------------------------- |
+| CSS transitions for simple hover/fade; Motion for exit/layout/orchestration | Pull Motion into a component for a one-property hover |
+| Animate `x`/`y`/`scale`/`opacity`                                           | Animate `width`/`height`/`top`/`left` (use `layout`)  |
+| Springs for interruptible movement                                          | Long duration+ease on things users interrupt          |
+| Stable `key`s under `AnimatePresence`                                       | Index keys that break exit tracking                   |
+| `useReducedMotion` fallbacks                                                | Unconditional motion                                  |
+| `layoutId` for shared-element morphs                                        | Hand-synced absolute-position clones                  |
 
 ## Verification
 

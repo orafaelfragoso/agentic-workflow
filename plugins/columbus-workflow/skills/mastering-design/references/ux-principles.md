@@ -51,7 +51,7 @@ Design all of them or the UI is unfinished:
   them.
 - Group related fields; one column beats two (two-column forms get skipped and
   mis-ordered); destructive or irreversible submissions get a confirm step
-  that names the object ("Delete *project Alpha*?").
+  that names the object ("Delete _project Alpha_?").
 - Preserve user input at all costs: across validation errors, accidental
   navigation, and reloads where feasible. Wiping a half-filled form is the
   fastest way to lose a user.
@@ -100,16 +100,16 @@ Design all of them or the UI is unfinished:
 
 ## Dos and don'ts
 
-| Do                                                     | Don't                                                   |
-| ------------------------------------------------------- | -------------------------------------------------------- |
-| One primary action per view                             | Three filled buttons competing                            |
-| Design loading/empty/error/overflow                     | Ship the ideal state only                                 |
-| Labels above inputs; placeholders as examples           | Placeholder-as-label                                      |
-| Inline, instructive validation on blur                  | Disabled-submit-as-error-message; alert() walls           |
-| Undo for destructive actions where possible             | Confirm dialogs for everything, undo for nothing          |
-| Semantic HTML, ARIA as last resort                      | div-with-onClick "buttons"                                |
-| Test with real, long, awkward content                   | Lorem ipsum that happens to fit                           |
-| Spacing to group; few borders                           | Boxes inside boxes inside boxes                           |
+| Do                                            | Don't                                            |
+| --------------------------------------------- | ------------------------------------------------ |
+| One primary action per view                   | Three filled buttons competing                   |
+| Design loading/empty/error/overflow           | Ship the ideal state only                        |
+| Labels above inputs; placeholders as examples | Placeholder-as-label                             |
+| Inline, instructive validation on blur        | Disabled-submit-as-error-message; alert() walls  |
+| Undo for destructive actions where possible   | Confirm dialogs for everything, undo for nothing |
+| Semantic HTML, ARIA as last resort            | div-with-onClick "buttons"                       |
+| Test with real, long, awkward content         | Lorem ipsum that happens to fit                  |
+| Spacing to group; few borders                 | Boxes inside boxes inside boxes                  |
 
 ## Verification
 

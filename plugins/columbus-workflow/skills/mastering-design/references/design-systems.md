@@ -6,7 +6,7 @@
 
 A design system is the **single source of truth** that makes fifty screens look
 like one product: tokens, components, patterns, and the rules for changing
-them. In code-first teams the system *is* the theme file plus the component
+them. In code-first teams the system _is_ the theme file plus the component
 library — treat both as a public API.
 
 ## Token architecture: three tiers
@@ -76,7 +76,7 @@ Drift, not bad initial design, is how systems die.
 - Audit periodically: grep for raw hex/pixel values, count distinct font sizes
   and radii in the rendered app, list components that duplicate a system
   component's role ([tailwind.md](tailwind.md) has the greps).
-- Document the *why* alongside the *what*: each component's doc states when to
+- Document the _why_ alongside the _what_: each component's doc states when to
   use it, when not to, and which alternative serves the rejected case. Record
   system-level decisions (token renames, breaking variant changes) durably —
   as ADRs where the project keeps them.
@@ -86,15 +86,15 @@ Drift, not bad initial design, is how systems die.
 
 ## Dos and don'ts
 
-| Do                                                          | Don't                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------- |
-| Three-tier tokens; components consume semantic only          | Components reading `--blue-600` directly                |
-| `variant`/`size` enums via `cva`                              | Boolean prop explosions                                  |
-| Compound components for flexible layouts                     | God components with 20 slot props                        |
-| One shared size scale across components                       | Per-component notions of "small"                         |
-| New needs → token/variant proposals                           | Copy-paste forks and call-site restyling                 |
-| Deprecation windows for token/variant removal                 | Silent renames that break screens                        |
-| Usage docs with "when not to use"                             | Prop tables with no guidance                             |
+| Do                                                  | Don't                                    |
+| --------------------------------------------------- | ---------------------------------------- |
+| Three-tier tokens; components consume semantic only | Components reading `--blue-600` directly |
+| `variant`/`size` enums via `cva`                    | Boolean prop explosions                  |
+| Compound components for flexible layouts            | God components with 20 slot props        |
+| One shared size scale across components             | Per-component notions of "small"         |
+| New needs → token/variant proposals                 | Copy-paste forks and call-site restyling |
+| Deprecation windows for token/variant removal       | Silent renames that break screens        |
+| Usage docs with "when not to use"                   | Prop tables with no guidance             |
 
 ## Verification
 

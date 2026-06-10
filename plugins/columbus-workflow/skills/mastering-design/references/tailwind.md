@@ -99,15 +99,15 @@ Every `@theme` variable generates utilities (`bg-brand-500`, `font-display`,
 
 ## Dos and don'ts
 
-| Do                                                        | Don't                                                  |
-| --------------------------------------------------------- | ------------------------------------------------------ |
-| `@import "tailwindcss"` + `@theme` (v4)                    | Port a `tailwind.config.js` into new v4 projects       |
-| Define colors in OKLCH                                     | Mix hex, hsl, and oklch token formats                  |
-| `gap-*` for sibling rhythm                                 | `mb-*` chains that break when items reorder            |
-| `prettier-plugin-tailwindcss` for class order              | Hand-sorted (i.e. unsorted) class soup                 |
-| `cn()`/`tailwind-merge` when props add classes             | String-concatenating conflicting classes               |
-| `motion-safe:`/`motion-reduce:` on animations              | Unconditional `animate-*` ([micro-interactions.md](micro-interactions.md)) |
-| Check generated CSS size when adding huge safelists        | Safelisting entire namespaces "just in case"           |
+| Do                                                  | Don't                                                                      |
+| --------------------------------------------------- | -------------------------------------------------------------------------- |
+| `@import "tailwindcss"` + `@theme` (v4)             | Port a `tailwind.config.js` into new v4 projects                           |
+| Define colors in OKLCH                              | Mix hex, hsl, and oklch token formats                                      |
+| `gap-*` for sibling rhythm                          | `mb-*` chains that break when items reorder                                |
+| `prettier-plugin-tailwindcss` for class order       | Hand-sorted (i.e. unsorted) class soup                                     |
+| `cn()`/`tailwind-merge` when props add classes      | String-concatenating conflicting classes                                   |
+| `motion-safe:`/`motion-reduce:` on animations       | Unconditional `animate-*` ([micro-interactions.md](micro-interactions.md)) |
+| Check generated CSS size when adding huge safelists | Safelisting entire namespaces "just in case"                               |
 
 ## Verification
 

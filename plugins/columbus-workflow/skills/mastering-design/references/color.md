@@ -43,12 +43,12 @@ color. Tint neutrals 1–2% chroma toward (or opposite) the brand hue:
 
 WCAG AA minimums:
 
-| Element                            | Minimum ratio |
-| ---------------------------------- | ------------- |
-| Body text                          | 4.5:1         |
-| Large text (≥ 24px / 19px bold)    | 3:1           |
-| UI components, borders, icons      | 3:1           |
-| Focus indicators against adjacent  | 3:1           |
+| Element                           | Minimum ratio |
+| --------------------------------- | ------------- |
+| Body text                         | 4.5:1         |
+| Large text (≥ 24px / 19px bold)   | 3:1           |
+| UI components, borders, icons     | 3:1           |
+| Focus indicators against adjacent | 3:1           |
 
 - Check both themes; muted text on muted backgrounds is where AA dies.
 - Placeholder text counts as text. The classic `gray-400`-on-white placeholder fails.
@@ -78,15 +78,15 @@ WCAG AA minimums:
 
 ## Dos and don'ts
 
-| Do                                                      | Don't                                                    |
-| -------------------------------------------------------- | --------------------------------------------------------- |
-| OKLCH everywhere; ramps with even `L` steps               | Eyeballed hex ramps with jumping brightness                |
-| Semantic tokens consumed by components                    | Components referencing `brand-500` directly                |
-| 60-30-10 distribution; neutral-dominant UIs               | Accent-colored everything                                  |
-| Slightly tinted neutrals                                  | Dead `C = 0` gray scales next to a vivid brand             |
-| Deliberate dark token set, reduced chroma                 | `filter: invert()`-style dark mode                         |
-| Verify contrast programmatically in both themes           | "Looks fine on my screen"                                  |
-| Icon/label + color for status                             | Hue as the only signal                                     |
+| Do                                              | Don't                                          |
+| ----------------------------------------------- | ---------------------------------------------- |
+| OKLCH everywhere; ramps with even `L` steps     | Eyeballed hex ramps with jumping brightness    |
+| Semantic tokens consumed by components          | Components referencing `brand-500` directly    |
+| 60-30-10 distribution; neutral-dominant UIs     | Accent-colored everything                      |
+| Slightly tinted neutrals                        | Dead `C = 0` gray scales next to a vivid brand |
+| Deliberate dark token set, reduced chroma       | `filter: invert()`-style dark mode             |
+| Verify contrast programmatically in both themes | "Looks fine on my screen"                      |
+| Icon/label + color for status                   | Hue as the only signal                         |
 
 ## Verification
 

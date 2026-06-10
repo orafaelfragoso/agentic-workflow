@@ -10,13 +10,13 @@ The test for every animation: **what does it communicate?** If the answer is
 
 ## Durations and easing
 
-| Interaction                          | Duration      | Easing                  |
-| ------------------------------------ | ------------- | ----------------------- |
-| Hover/focus/press feedback           | 100–150 ms    | `ease-out`              |
-| Element entering (dropdown, toast)   | 150–250 ms    | `ease-out`              |
-| Element exiting                      | 100–200 ms    | `ease-in`               |
-| Layout/position change               | 200–300 ms    | `ease-in-out` or spring |
-| Large surfaces (page, drawer, modal) | 250–400 ms    | `ease-in-out` or spring |
+| Interaction                          | Duration   | Easing                  |
+| ------------------------------------ | ---------- | ----------------------- |
+| Hover/focus/press feedback           | 100–150 ms | `ease-out`              |
+| Element entering (dropdown, toast)   | 150–250 ms | `ease-out`              |
+| Element exiting                      | 100–200 ms | `ease-in`               |
+| Layout/position change               | 200–300 ms | `ease-in-out` or spring |
+| Large surfaces (page, drawer, modal) | 250–400 ms | `ease-in-out` or spring |
 
 - **Enter decelerating (`ease-out`), exit accelerating (`ease-in`).** Linear is
   only for continuous things (spinners, progress, marquees).
@@ -40,9 +40,13 @@ CSS first, library second:
 
 ```css
 .button {
-  transition: transform 120ms var(--ease-snappy), background-color 120ms ease-out;
+  transition:
+    transform 120ms var(--ease-snappy),
+    background-color 120ms ease-out;
 }
-.button:active { transform: scale(0.97); }
+.button:active {
+  transform: scale(0.97);
+}
 ```
 
 Tailwind: `transition-transform duration-150 ease-out active:scale-[0.97]`.
@@ -63,7 +67,7 @@ orchestrated staggers, gesture physics.
   the one acceptable infinite animation.
 - **State transitions**: fade/scale dropdowns from their trigger
   (`transform-origin` at the trigger side), slide drawers from their edge,
-  cross-fade content swaps ≤ 150 ms. Movement should explain *where it came from*.
+  cross-fade content swaps ≤ 150 ms. Movement should explain _where it came from_.
 - **Success**: a brief check morph or color pulse (≤ 600 ms total) beats a
   modal. Don't block the next action to celebrate.
 - **Attention**: one subtle pulse or wiggle to direct the eye, run **once** —
@@ -73,7 +77,9 @@ orchestrated staggers, gesture physics.
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -87,17 +93,17 @@ large sweeps; this is an accessibility requirement.
 
 ## Dos and don'ts
 
-| Do                                                        | Don't                                                       |
-| ---------------------------------------------------------- | ------------------------------------------------------------ |
-| Animate to explain (origin, causality, state)              | Animate to decorate                                          |
-| 100–300 ms for interface feedback                          | 500 ms+ transitions on routine actions                       |
-| `transform`/`opacity` only                                 | `width`/`height`/`top`/`box-shadow` transitions               |
-| One easing family from theme tokens                        | A different bezier per component                              |
-| Press feedback on everything clickable                     | Hover-only affordances                                        |
-| Skeletons matching real layout                             | Full-screen spinners for partial loads                       |
-| Indicator delay (~150 ms) on fast paths                    | Flashing a spinner for 80 ms                                  |
-| `motion-safe:`/`motion-reduce:` everywhere                 | Ignoring `prefers-reduced-motion`                             |
-| Run attention cues once                                    | Infinite pulse/bounce loops                                   |
+| Do                                            | Don't                                           |
+| --------------------------------------------- | ----------------------------------------------- |
+| Animate to explain (origin, causality, state) | Animate to decorate                             |
+| 100–300 ms for interface feedback             | 500 ms+ transitions on routine actions          |
+| `transform`/`opacity` only                    | `width`/`height`/`top`/`box-shadow` transitions |
+| One easing family from theme tokens           | A different bezier per component                |
+| Press feedback on everything clickable        | Hover-only affordances                          |
+| Skeletons matching real layout                | Full-screen spinners for partial loads          |
+| Indicator delay (~150 ms) on fast paths       | Flashing a spinner for 80 ms                    |
+| `motion-safe:`/`motion-reduce:` everywhere    | Ignoring `prefers-reduced-motion`               |
+| Run attention cues once                       | Infinite pulse/bounce loops                     |
 
 ## Verification
 

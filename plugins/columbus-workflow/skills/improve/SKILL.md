@@ -45,13 +45,13 @@ Audit the codebase across the categories in [references/audit-playbook.md](refer
 
 For repos of any real size, fan out with parallel read-only task agents — deploy **this plugin's agents**, matched to category:
 
-| Categories                            | Agent                                  |
-| ------------------------------------- | -------------------------------------- |
-| correctness/bugs                       | `agentic-workflow:quality-reviewer`    |
-| security, dependencies & migrations    | `agentic-workflow:security-analyst`    |
-| performance, tech debt & architecture  | `agentic-workflow:architecture-reviewer` |
-| test coverage                          | `agentic-workflow:test-engineer`       |
-| DX & tooling, docs, direction          | `agentic-workflow:navigator`           |
+| Categories                            | Agent                                    |
+| ------------------------------------- | ---------------------------------------- |
+| correctness/bugs                      | `agentic-workflow:quality-reviewer`      |
+| security, dependencies & migrations   | `agentic-workflow:security-analyst`      |
+| performance, tech debt & architecture | `agentic-workflow:architecture-reviewer` |
+| test coverage                         | `agentic-workflow:test-engineer`         |
+| DX & tooling, docs, direction         | `agentic-workflow:navigator`             |
 
 If the host agent can't spawn task agents, audit directly yourself in category-priority order. **Agents do not inherit this skill's context**, so each agent brief must include:
 

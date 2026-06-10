@@ -104,14 +104,14 @@ Rules that keep theming coherent:
 
 ## Dos and don'ts
 
-| Do                                                         | Don't                                                       |
-| ----------------------------------------------------------- | ----------------------------------------------------------- |
-| Add via CLI, then edit your copy                            | Treat shadcn like a locked npm dependency                   |
-| Semantic tokens in every component                          | `bg-white dark:bg-zinc-900` hardcoded per component         |
-| New looks as `cva` variants                                 | Per-call-site override class stacks                         |
-| Respect `x`/`x-foreground` pairing                          | `text-white` on `bg-primary`                                |
-| Keep focus/ARIA behavior intact when restyling              | `outline-none` and removed `data-state` styling             |
-| One `--radius`, one `--ring`, themed in `:root`/`.dark`     | Per-component radius and focus-ring colors                  |
+| Do                                                      | Don't                                               |
+| ------------------------------------------------------- | --------------------------------------------------- |
+| Add via CLI, then edit your copy                        | Treat shadcn like a locked npm dependency           |
+| Semantic tokens in every component                      | `bg-white dark:bg-zinc-900` hardcoded per component |
+| New looks as `cva` variants                             | Per-call-site override class stacks                 |
+| Respect `x`/`x-foreground` pairing                      | `text-white` on `bg-primary`                        |
+| Keep focus/ARIA behavior intact when restyling          | `outline-none` and removed `data-state` styling     |
+| One `--radius`, one `--ring`, themed in `:root`/`.dark` | Per-component radius and focus-ring colors          |
 
 ## Verification
 

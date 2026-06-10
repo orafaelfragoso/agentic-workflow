@@ -31,17 +31,17 @@ Produce interfaces that look professionally designed: consistent tokens, clear h
 
 ## Common mistakes
 
-| Mistake                                  | Why it bites                                | Fix                                            |
-| ---------------------------------------- | ------------------------------------------- | ---------------------------------------------- |
-| Arbitrary values (`mt-[13px]`, `#3b82f6`) | Breaks rhythm, unthemable, drifts           | Theme tokens; extend `@theme` if missing       |
-| Gray text on gray background "subtlety"  | Fails contrast, unreadable                  | Check 4.5:1; use the muted-foreground token    |
-| Pure black/white anywhere                | Harsh, flat, glare in dark mode             | Near-neutrals with slight hue (OKLCH)          |
-| Dark mode by inverting colors            | Vibrating saturated colors, crushed depth   | Separate dark token set; reduce chroma         |
-| Animating `width`/`height`/`top`         | Layout thrash, jank                         | `transform` and `opacity` only                 |
-| Spinners for everything                  | Feels slower than it is                     | Skeletons for structure, optimistic UI for actions |
-| Five font sizes in one card              | No hierarchy, visual noise                  | Stick to the type scale; vary weight and color |
-| Disabling focus outlines                 | Keyboard users lost                         | Style `focus-visible`, never remove it         |
-| Restyling shadcn internals with overrides | Fights the component, breaks on update      | Edit your copy of the component — you own it   |
+| Mistake                                   | Why it bites                              | Fix                                                |
+| ----------------------------------------- | ----------------------------------------- | -------------------------------------------------- |
+| Arbitrary values (`mt-[13px]`, `#3b82f6`) | Breaks rhythm, unthemable, drifts         | Theme tokens; extend `@theme` if missing           |
+| Gray text on gray background "subtlety"   | Fails contrast, unreadable                | Check 4.5:1; use the muted-foreground token        |
+| Pure black/white anywhere                 | Harsh, flat, glare in dark mode           | Near-neutrals with slight hue (OKLCH)              |
+| Dark mode by inverting colors             | Vibrating saturated colors, crushed depth | Separate dark token set; reduce chroma             |
+| Animating `width`/`height`/`top`          | Layout thrash, jank                       | `transform` and `opacity` only                     |
+| Spinners for everything                   | Feels slower than it is                   | Skeletons for structure, optimistic UI for actions |
+| Five font sizes in one card               | No hierarchy, visual noise                | Stick to the type scale; vary weight and color     |
+| Disabling focus outlines                  | Keyboard users lost                       | Style `focus-visible`, never remove it             |
+| Restyling shadcn internals with overrides | Fights the component, breaks on update    | Edit your copy of the component — you own it       |
 
 ## Reference files
 

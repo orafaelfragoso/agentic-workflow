@@ -41,7 +41,7 @@ Bun reads `package.json` and writes `bun.lock`; per-project settings live in
 ### Node 24 runs TypeScript directly
 
 Node 24 executes `.ts` files natively (`node index.ts`) by **stripping types** —
-no flags, no loader. Only *erasable* syntax is supported: `enum`, `namespace`,
+no flags, no loader. Only _erasable_ syntax is supported: `enum`, `namespace`,
 parameter properties, and `import x = require()` need real transpilation. For
 Node-run projects (scripts, servers without a bundler), enable the matching
 compiler flag so `tsc` rejects non-erasable syntax up front:

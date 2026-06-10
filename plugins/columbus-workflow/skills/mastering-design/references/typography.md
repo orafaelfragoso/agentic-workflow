@@ -14,13 +14,13 @@ editorial). Base 16px.
 
 ```css
 @theme {
-  --text-xs: 0.75rem;     /* meta, labels */
-  --text-sm: 0.875rem;    /* secondary, dense UI body */
-  --text-base: 1rem;      /* body */
-  --text-lg: 1.25rem;     /* card titles */
-  --text-xl: 1.563rem;    /* section headings */
-  --text-2xl: 1.953rem;   /* page titles */
-  --text-3xl: 2.441rem;   /* hero */
+  --text-xs: 0.75rem; /* meta, labels */
+  --text-sm: 0.875rem; /* secondary, dense UI body */
+  --text-base: 1rem; /* body */
+  --text-lg: 1.25rem; /* card titles */
+  --text-xl: 1.563rem; /* section headings */
+  --text-2xl: 1.953rem; /* page titles */
+  --text-3xl: 2.441rem; /* hero */
 }
 ```
 
@@ -77,16 +77,16 @@ editorial). Base 16px.
 
 ## Dos and don'ts
 
-| Do                                                       | Don't                                                  |
-| --------------------------------------------------------- | ------------------------------------------------------- |
-| One scale, generated from one ratio                       | Ad-hoc `text-[15px]`, `text-[22px]` sprinkles            |
-| Weight + color for hierarchy first                        | A different size for every distinction                  |
-| 45–75ch measure on prose                                  | Full-width paragraphs                                   |
-| `leading-relaxed` body, `leading-tight` headings          | One global line height                                  |
-| `tabular-nums` for tables, prices, timers                 | Jittering proportional digits in data                   |
-| ≤ 2 families, ≤ 4 weights                                 | Font-family soup                                        |
-| `font-display: swap` + preload + subset                   | Render-blocking, full-charset font loads                 |
-| Real apostrophes and quotes (’ “ ”) in UI copy            | Typewriter quotes in polished surfaces                  |
+| Do                                               | Don't                                         |
+| ------------------------------------------------ | --------------------------------------------- |
+| One scale, generated from one ratio              | Ad-hoc `text-[15px]`, `text-[22px]` sprinkles |
+| Weight + color for hierarchy first               | A different size for every distinction        |
+| 45–75ch measure on prose                         | Full-width paragraphs                         |
+| `leading-relaxed` body, `leading-tight` headings | One global line height                        |
+| `tabular-nums` for tables, prices, timers        | Jittering proportional digits in data         |
+| ≤ 2 families, ≤ 4 weights                        | Font-family soup                              |
+| `font-display: swap` + preload + subset          | Render-blocking, full-charset font loads      |
+| Real apostrophes and quotes (’ “ ”) in UI copy   | Typewriter quotes in polished surfaces        |
 
 ## Verification
 
