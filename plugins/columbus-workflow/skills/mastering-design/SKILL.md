@@ -1,6 +1,6 @@
 ---
 name: mastering-design
-description: Master professional UI design and implementation — design tokens and theming with Tailwind CSS v4, shadcn/ui components, UX principles, micro-interactions, animation with Motion (formerly Framer Motion), color science (OKLCH, contrast, dark mode), and typography. Use when building or improving user interfaces, when asked to make a UI "look professional", "polished", or "better", when styling with Tailwind or shadcn, designing color palettes or dark mode, choosing fonts, adding animations, transitions, or motion design, or reviewing UX and accessibility.
+description: Master professional UI design and implementation — design tokens and theming with Tailwind CSS v4, shadcn/ui components, UX principles, micro-interactions, animation with Motion (formerly Framer Motion), color science (OKLCH, contrast, dark mode), and typography. Use when building or improving user interfaces, when asked to make a UI "look professional", "polished", or "better", when styling with Tailwind or shadcn, designing color palettes or dark mode, choosing fonts, adding animations, transitions, or motion design, building or auditing a design system, or reviewing UX and accessibility.
 ---
 
 # Mastering Design
@@ -24,7 +24,7 @@ Produce interfaces that look professionally designed: consistent tokens, clear h
 ## Workflow
 
 1. **Read the existing design system first.** Inspect the theme (`@theme` tokens, `:root` variables, `components.json`, existing components) before writing any UI. New work must use the established tokens, spacing rhythm, and component variants — extend the system, don't fork it.
-2. **Establish foundations before screens.** If tokens are missing or inconsistent (raw hex values scattered, arbitrary spacing), fix the foundation first: color tokens ([references/color.md](references/color.md)), type scale ([references/typography.md](references/typography.md)), spacing/radius in the Tailwind theme ([references/tailwind.md](references/tailwind.md)).
+2. **Establish foundations before screens.** If tokens are missing or inconsistent (raw hex values scattered, arbitrary spacing), fix the foundation first: token architecture ([references/design-systems.md](references/design-systems.md)), color tokens ([references/color.md](references/color.md)), type scale ([references/typography.md](references/typography.md)), spacing/radius in the Tailwind theme ([references/tailwind.md](references/tailwind.md)).
 3. **Build with the system.** Compose shadcn/ui components and Tailwind utilities; create new components only when the registry has nothing close ([references/shadcn.md](references/shadcn.md)). Apply UX patterns for states the happy path hides: loading, empty, error, long-content ([references/ux-principles.md](references/ux-principles.md)).
 4. **Polish with motion.** Add micro-interactions to state changes and entrances last, never first ([references/micro-interactions.md](references/micro-interactions.md)); use the Motion library only where CSS can't express it ([references/motion.md](references/motion.md)).
 5. **Validate** against the checklist below; check contrast and keyboard navigation, not just visuals.
@@ -47,6 +47,7 @@ Produce interfaces that look professionally designed: consistent tokens, clear h
 
 Read the one whose topic matches the task — each file repeats its load condition at the top:
 
+- [references/design-systems.md](references/design-systems.md) — read for token architecture, component API design, naming, and keeping an app consistent at scale
 - [references/tailwind.md](references/tailwind.md) — read for Tailwind v4 setup, `@theme` tokens, dark mode variants, responsive/container queries, utility discipline
 - [references/shadcn.md](references/shadcn.md) — read for shadcn/ui setup, semantic color tokens, customizing owned components, composition patterns
 - [references/color.md](references/color.md) — read for palette construction, OKLCH, contrast, semantic color tokens, dark mode color design
