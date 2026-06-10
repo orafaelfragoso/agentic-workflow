@@ -1,28 +1,39 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
-  "name": "agentic-workflow",
-  "displayName": "Agentic Workflow",
+  "name": "columbus",
+  "displayName": "Columbus Workflow",
   "version": "0.2.0",
-  "description": "Agentic workflow with a Columbus-managed memory system, reusable skills, agents, and hooks.",
+  "description": "Columbus workflow with a fast indexed memory system, reusable skills, agents, and hooks.",
   "author": {
     "name": "Rafael Fragoso",
-    "email": "rafaelfragosom@gmail.com",
     "url": "https://github.com/orafaelfragoso"
   },
   "license": "MIT",
-  "keywords": ["columbus", "go", "typescript", "commit", "triage", "agents", "skills", "hooks", "claude-code"],
-  "skills": "./plugins/agentic-workflow/skills/",
-  "agents": [
-    "./plugins/agentic-workflow/agents/navigator.md",
-    "./plugins/agentic-workflow/agents/sprint-planner.md",
-    "./plugins/agentic-workflow/agents/delivery-engineer.md",
-    "./plugins/agentic-workflow/agents/test-engineer.md",
-    "./plugins/agentic-workflow/agents/quality-reviewer.md",
-    "./plugins/agentic-workflow/agents/security-analyst.md",
-    "./plugins/agentic-workflow/agents/architecture-reviewer.md",
-    "./plugins/agentic-workflow/agents/release-coordinator.md"
+  "keywords": [
+    "columbus",
+    "go",
+    "typescript",
+    "commit",
+    "triage",
+    "agents",
+    "skills",
+    "hooks",
+    "claude-code"
   ],
-  "outputStyles": ["./plugins/agentic-workflow/output-styles/caveman.md"],
+  "skills": "./plugins/columbus-workflow/skills/",
+  "agents": [
+    "./plugins/columbus-workflow/agents/navigator.md",
+    "./plugins/columbus-workflow/agents/sprint-planner.md",
+    "./plugins/columbus-workflow/agents/delivery-engineer.md",
+    "./plugins/columbus-workflow/agents/test-engineer.md",
+    "./plugins/columbus-workflow/agents/quality-reviewer.md",
+    "./plugins/columbus-workflow/agents/security-analyst.md",
+    "./plugins/columbus-workflow/agents/architecture-reviewer.md",
+    "./plugins/columbus-workflow/agents/release-coordinator.md"
+  ],
+  "outputStyles": [
+    "./plugins/columbus-workflow/output-styles/caveman.md"
+  ],
   "hooks": {
     "PreToolUse": [
       {
@@ -30,7 +41,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/plugins/agentic-workflow/scripts/rtk-rewrite.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/plugins/columbus-workflow/scripts/rtk-rewrite.sh"
           }
         ]
       }
@@ -41,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/plugins/agentic-workflow/scripts/prompt.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/plugins/columbus-workflow/scripts/prompt.sh"
           }
         ]
       }

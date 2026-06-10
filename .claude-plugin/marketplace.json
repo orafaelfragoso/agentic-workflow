@@ -1,5 +1,5 @@
 {
-  "name": "agentic-workflow",
+  "name": "orafaelfragoso",
   "owner": {
     "name": "Rafael Fragoso",
     "url": "https://github.com/orafaelfragoso"
@@ -7,14 +7,14 @@
   "description": "Local marketplace for the Agentic Workflow plugin.",
   "plugins": [
     {
-      "name": "agentic-workflow",
+      "name": "columbus-workflow",
       "source": ".",
-      "displayName": "Agentic Workflow",
-      "description": "Agentic workflow with a Columbus-managed memory system, reusable skills, agents, and hooks.",
+      "displayName": "Columbus Workflow",
+      "description": "Columbus workflow fast indexed memory system, reusable skills, agents, and hooks.",
       "version": "0.2.0",
       "category": "Developer Tools",
       "tags": [
-        "rafael-fragoso",
+        "orafaelfragoso",
         "columbus",
         "go",
         "typescript",
