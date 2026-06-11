@@ -11,6 +11,7 @@ Set up everything the Columbus Workflow plugin needs — global Claude Code defa
 
 - `config/claude/settings.local.example.json` (plugin-relative) deep-merged into the user's global `settings.json`. Plugin values win on conflict; user keys not present in the example are preserved. The example enables this plugin globally (`enabledPlugins["columbus-workflow@orafaelfragoso"]`) alongside the recommended LSP plugins.
 - `scripts/statusline-command.sh` copied to a stable path inside the Claude config dir (default `~/.claude/statusline-command.sh`) and referenced from `statusLine.command`. It is copied, not referenced in place, so the setting keeps working when the plugin cache path changes on upgrade.
+- `plugins/columbus-workflow/output-styles/caveman.md` copied to `~/.claude/output-styles/caveman.md` and `outputStyle` in settings is set to that absolute path. Copying to `~/.claude` root makes the style discoverable by Claude Code regardless of plugin cache location.
 - Optionally, a Columbus index for the current project (`columbus install`), so the plugin's skills and agents have code search and memory available.
 
 ## Workflow
@@ -51,6 +52,7 @@ Set up everything the Columbus Workflow plugin needs — global Claude Code defa
 - [ ] `enabledPlugins` contains the columbus-workflow entry for the user's marketplace.
 - [ ] `statusLine.command` points at an executable copy of the statusline script.
 - [ ] Statusline script produces output when fed `{}` on stdin.
+- [ ] `outputStyle` in settings points at `~/.claude/output-styles/caveman.md` and that file exists.
 - [ ] `columbus doctor` reports a healthy project, or the user explicitly deferred Columbus setup.
 - [ ] `rtk` is installed, or the user was told the rewrite hook is inactive without it.
 - [ ] The rtk hook self-test produced an `updatedInput` rewrite, or rtk's absence was reported.
