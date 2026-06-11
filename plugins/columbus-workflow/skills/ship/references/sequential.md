@@ -22,7 +22,7 @@ Each stage names the agent that runs it:
 7. Architecture review (`architecture-reviewer`, model: opus): design patterns, boundaries, coupling, and long-term maintainability.
 8. Release readiness (`release-coordinator`, model: opus): verification summary, branch/PR state, memory updates, and follow-ups.
 
-A failed gate sends the findings back to the stage's agent as a new scoped brief (max two revision rounds, then record the blocker and stop). The coordinator never absorbs a failed stage's work itself.
+A failed gate sends the findings back to the stage's *existing* agent via `SendMessage` — keep stage agents alive until their gate passes, so revisions reuse their context instead of re-fetching it (max two revision rounds, or stop early on no progress or a repeated failure, then record the blocker and stop). The coordinator never absorbs a failed stage's work itself.
 
 ## Plan Protocol
 
@@ -94,7 +94,7 @@ Before declaring the flow done:
 
 1. Confirm each required stage is complete or explicitly skipped.
 2. Confirm verification commands and results.
-3. Record decisions as `adr` and shipped behavior as `documentation`, anchored with tags, links, and evidence.
-4. Retire the executed plan: `columbus memory update mem_12 --kind documentation`, or `columbus memory remove mem_12`.
+3. Record decisions as `adr`, anchored with tags, links, and evidence. Add `documentation` only when a process or behavior genuinely needs explaining — written fresh, never converted from the plan.
+4. Remove the executed plan: `columbus memory remove mem_12`.
 5. Capture discovered follow-up work as a new `plan` memory.
 6. Run `columbus memory validate` if the work moved code that memories anchor to.

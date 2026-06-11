@@ -32,7 +32,7 @@ Run the stages in order; each is a deployed agent with a scoped brief:
 4. **Review** — `quality-reviewer` (model: sonnet) on the diff. Add `security-analyst` (model: sonnet) if dependencies, auth, permissions, secrets, data handling, or network exposure changed; add `architecture-reviewer` (model: opus) if abstractions, boundaries, or shared flows changed.
 5. **Close** — the coordinator checks the gates, then writes memory (below).
 
-If a review gate fails, send the findings back to the `delivery-engineer` as a new scoped brief. Max two revision rounds; then stop, record the blocker in the plan memory, and surface to the user.
+If a review gate fails, send the findings to the *same* `delivery-engineer` via `SendMessage` — it still holds the plan scope and its own change context, so the follow-up brief is just the findings and the gate to satisfy. Do not spawn a fresh agent for a revision. Max two revision rounds, or stop early if a round makes no progress or repeats the same failure; then record the blocker in the plan memory and surface to the user.
 
 The coordinator's own contributions are limited to: reading agent JSON reports, running read-only checks to confirm gate claims, branch management, and memory writes. The coordinator never reads diffs — gate agents (quality-reviewer, test-engineer, security-analyst, architecture-reviewer) fetch the diff themselves. Record meaningful discoveries in the plan memory body, not chat-only notes:
 
@@ -73,22 +73,21 @@ Run these in order, each backed by an agent JSON report `{ status, cause, risks 
 
 Only after verification:
 
-1. Record durable outcomes:
+1. Record durable outcomes. Decisions become `adr` memories. Add a `documentation` memory only when a process or behavior genuinely needs explaining — write it fresh from the shipped code, never by converting the plan:
 
    ```sh
    columbus memory add adr --title "<decision>" \
      --body "Decision: <what>. Context: <forces>. Consequences: <trade-off>." \
      --tag <area> --link file:<path>
 
+   # only if the shipped behavior needs explaining:
    columbus memory add documentation --title "<shipped behavior>" \
      --body "<how it works now>" --tag <area> --evidence <path>:<start>-<end>
    ```
 
-2. Retire the executed plan — re-kind it if its content now describes reality, or remove it:
+2. Remove the executed plan — it is no longer future work:
 
    ```sh
-   columbus memory update mem_12 --kind documentation
-   # or
    columbus memory remove mem_12
    ```
 

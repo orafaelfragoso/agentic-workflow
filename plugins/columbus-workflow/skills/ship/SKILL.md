@@ -21,7 +21,13 @@ Every mode runs the same **agentic loop**, differing only in how many lanes run 
 4. **Review** — `quality-reviewer` always; `security-analyst` and `architecture-reviewer` when their gates apply.
 5. **Close** — `release-coordinator` for branch/PR/merge readiness when shipping; the coordinator records memory.
 
-A failed gate loops back: the reviewer's findings become a new scoped brief for the implementing agent (max two revision rounds, then stop and surface to the user).
+**Agents persist while their work is open.** Deploy each loop agent once, give it a name, and keep it addressable: a revision round continues the *same* agent via `SendMessage` with the reviewer's findings — its context (plan scope, files, prior attempts) is intact, so nothing is re-fetched. Never respawn a fresh agent for work an existing agent already has context on; respawning pays the full context-loading cost again. Use `run_in_background: true` for lanes that run while the coordinator does other work, and let agents terminate only when their lane's work is closed or blocked.
+
+A failed gate loops back: send the findings to the implementing agent as a `SendMessage` follow-up brief. Stop conditions — surface to the user and record the blocker in the plan memory when any of these hold:
+
+- two revision rounds are exhausted
+- a round produces no progress on the gate it was sent to fix
+- the same failure repeats with the same cause across rounds
 
 ## Stage classification
 
@@ -51,7 +57,7 @@ Deploy each agent with its assigned model:
 
 ## Brief and report protocol
 
-**Brief** (coordinator → agent): one clear action sentence + the necessary context (plan id, relevant memory excerpt, branch, files in scope, acceptance criteria, constraints). Do not include context the agent does not need for its specific task.
+**Brief** (coordinator → agent): one clear action sentence + the necessary context (plan id, relevant memory excerpt, branch, files in scope, acceptance criteria, constraints). When the work touches code, name the mastering skill to load (`columbus-workflow:mastering-golang`, `columbus-workflow:mastering-typescript`, or `columbus-workflow:mastering-design`). Do not include context the agent does not need for its specific task.
 
 **Report** (agent → coordinator): JSON only.
 
@@ -71,7 +77,7 @@ Deploy each agent with its assigned model:
 2. **Pick the orchestration mode**
    - Direct: one lane — a single agent chain on one branch completes the work. Read `references/direct.md`.
    - Sequential: stages depend on earlier outputs or need gated stages. Read `references/sequential.md`.
-   - Parallel: independent lanes run concurrently in isolated worktrees and merge later. Read `references/parallel.md`.
+   - Parallel: independent lanes run concurrently in isolated worktrees and merge later. Read `references/parallel.md`. When agent teams are available (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`), run parallel lanes as a team — the shared task list and teammate messaging replace hand-tracked lane state; the reference covers both forms.
 
 3. **Prepare the delivery lane(s)**
    - Confirm which plan memory (or which of its steps) is being executed, and its acceptance criteria.
@@ -93,7 +99,7 @@ Deploy each agent with its assigned model:
 6. **Close out in memory**
    - At milestones, update the plan memory body so progress survives the session (`columbus memory update <id> --body "..."`).
    - If work stops, note the blocker in the plan memory before ending the session.
-   - After verification: record decisions as `adr`, shipped behavior as `documentation`, then re-kind the executed plan (`memory update <id> --kind documentation`) or remove it.
+   - After verification: record decisions as `adr`; add a `documentation` memory only when a process or behavior genuinely needs explaining — written fresh, never converted from the plan. Then remove the executed plan (`columbus memory remove <id>`).
    - Capture discovered follow-up work as a new `plan` memory instead of widening scope silently.
    - Run `columbus memory validate` if the work moved code that memories anchor to.
 
@@ -110,4 +116,5 @@ Deploy each agent with its assigned model:
 - [ ] All agent communication used the JSON brief/report protocol.
 - [ ] The coordinator did not read diffs — gate agents fetched their own.
 - [ ] Implementation, tests, review, security, and architecture gates were run or explicitly skipped with a reason.
-- [ ] Durable outcomes were captured: ADRs for decisions, documentation for shipped behavior, executed plans re-kinded or removed.
+- [ ] Revision rounds continued the same agent via `SendMessage` — no agent was respawned for work a live agent had context on.
+- [ ] Durable outcomes were captured: ADRs for decisions, fresh documentation only where behavior needed explaining, executed plans removed.
