@@ -42,12 +42,14 @@ When developing locally, validate the plugin from the repository root:
 claude plugin validate .
 ```
 
+Repo consistency checks live in `scripts/check-consistency.sh`; run them before committing. CI runs them automatically on every push and pull request.
+
 Claude Code loads assets through root manifest paths that point into `plugins/columbus-workflow/`.
 Add new agents to the `agents` list in `.claude-plugin/plugin.json`.
 
 ## Ship Delivery Model
 
-This plugin adapts sprint delivery around Columbus instead of a report registry:
+This plugin organizes delivery around Columbus plan memories:
 
 - The active session is the coordinator and never implements. All code, test, and review work is done by deployed task agents through an explore → implement → verify → review → close loop; the coordinator scopes briefs, manages branches/worktrees, judges gates, and writes memory.
 - `ship` executes Columbus `plan` memories through direct, sequential, or parallel delivery flows. Live execution state lives in the session; Columbus holds the durable record.
@@ -94,7 +96,7 @@ The agents pin Claude model aliases (`haiku`/`sonnet`), reference Claude MCP too
 
 ## Bundled Components
 
-- Skills: `ship`, `columbus`, `commit`, `interview`, `triage`, `improve`, `setup`, `mastering-golang`, `mastering-typescript`, `mastering-design`, `write-a-skill`, `write-an-agent`
+- Skills: `ship`, `columbus`, `commit`, `interview`, `improve`, `setup`, `mastering-golang`, `mastering-typescript`, `mastering-design`, `write-a-skill`, `write-an-agent`
 - Agents: `navigator`, `delivery-engineer`, `test-engineer`, `quality-reviewer`, `security-analyst`, `architecture-reviewer`, `release-coordinator`
 - Scripts: `prompt.sh`, `rtk-rewrite.sh`, `statusline-command.sh`
 - Hooks: `SessionStart` context injection and `PreToolUse` RTK bash rewrite

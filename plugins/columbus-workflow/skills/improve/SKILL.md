@@ -46,13 +46,13 @@ Audit the codebase across the categories in [references/audit-playbook.md](refer
 
 For repos of any real size, fan out with parallel read-only task agents — deploy **this plugin's agents**, matched to category:
 
-| Categories                            | Agent                                    |
-| ------------------------------------- | ---------------------------------------- |
-| correctness/bugs                      | `agentic-workflow:quality-reviewer`      |
-| security, dependencies & migrations   | `agentic-workflow:security-analyst`      |
-| performance, tech debt & architecture | `agentic-workflow:architecture-reviewer` |
-| test coverage                         | `agentic-workflow:test-engineer`         |
-| DX & tooling, docs, direction         | `agentic-workflow:navigator`             |
+| Categories                            | Agent                                       |
+| ------------------------------------- | ------------------------------------------- |
+| correctness/bugs                      | `columbus-workflow:quality-reviewer`        |
+| security, dependencies & migrations   | `columbus-workflow:security-analyst`        |
+| performance, tech debt & architecture | `columbus-workflow:architecture-reviewer`   |
+| test coverage                         | `columbus-workflow:test-engineer`           |
+| DX & tooling, docs, direction         | `columbus-workflow:navigator`               |
 
 If the host agent can't spawn task agents, audit directly yourself in category-priority order. **Agents do not inherit this skill's context**, so each agent brief must include:
 
@@ -127,7 +127,7 @@ Finish with the **final report in the session** (never a memory): the recommende
 - `branch` → audit only the current working branch's changes: scope = files changed since the merge-base with the default branch (`git diff --name-only $(git merge-base origin/<default> HEAD)..HEAD`) plus their direct importers/callers. Light recon, all categories, usually no agents. **Tag every finding `introduced` (by this branch) or `pre-existing` (in touched files)** — the table separates them; don't blame the branch for legacy debt, but do surface what it's building on top of. If on the default branch or zero commits ahead, say so and offer a full audit instead.
 - `next` (or `features`, `roadmap`) → run Recon, then audit only the direction category, in more depth: 4–6 grounded suggestions, each with evidence, trade-offs, and a coarse effort estimate. Selected ones become design/spike plans, not build-everything plans. Direction calls the user ratifies are recorded as `adr` memories.
 - `plan <description>` → skip the audit; the user already knows what they want. Run Recon, investigate just enough to specify it properly, and write a single plan memory. If the description is too ambiguous to specify honestly, first try to resolve each ambiguity from the codebase itself; only what's left becomes questions to the user — asked one at a time, each with a recommended answer.
-- `review-plan <memory id>` → critique an existing plan memory (`columbus show memory mem_NN --llm`) against the template's standards and tighten it via `columbus memory update`. If you authored the plan in this same session, also have a fresh-context `agentic-workflow:navigator` agent read it cold and report ambiguities — self-critique misses gaps you mentally fill from context the executor won't have.
+- `review-plan <memory id>` → critique an existing plan memory (`columbus show memory mem_NN --llm`) against the template's standards and tighten it via `columbus memory update`. If you authored the plan in this same session, also have a fresh-context `columbus-workflow:navigator` agent read it cold and report ambiguities — self-critique misses gaps you mentally fill from context the executor won't have.
 - `reconcile` → process what happened since last session: verify executed plans and re-kind them to `documentation`, investigate blocked ones, refresh drifted plans, retire dead findings. See [references/plan-lifecycle.md](references/plan-lifecycle.md).
 
 ## Tone of the output

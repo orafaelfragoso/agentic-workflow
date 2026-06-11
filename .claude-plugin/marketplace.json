@@ -10,7 +10,7 @@
       "name": "columbus-workflow",
       "source": ".",
       "displayName": "Columbus Workflow",
-      "description": "Columbus workflow fast indexed memory system, reusable skills, agents, and hooks.",
+      "description": "Columbus workflow with a fast indexed memory system, reusable skills, agents, and hooks.",
       "version": "0.3.0",
       "category": "Developer Tools",
       "tags": [
@@ -19,7 +19,6 @@
         "go",
         "typescript",
         "commit",
-        "triage",
         "agents",
         "skills",
         "hooks",

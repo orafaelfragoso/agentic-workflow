@@ -23,7 +23,7 @@ Confirm Columbus is set up before relying on memory:
 columbus doctor        # verifies CLI, .columbus.json, and a built index
 ```
 
-If `.columbus.json` is missing or the index is empty, stop and tell the user to run the `/columbus` skill first — without an index, code cross-referencing and memory are unavailable.
+If `.columbus.json` is missing or the index is empty, stop and tell the user to run the `setup` skill (or `columbus install`) first — without an index, code cross-referencing and memory are unavailable.
 
 ### 2. Load durable context
 
@@ -79,6 +79,6 @@ columbus memory add documentation --title "<trap>" \
 
 ### 5. Close out
 
-After the interview, offer to capture the agreed plan as a `plan` memory — goal, approach, ordered steps with done-conditions, and acceptance criteria — linked to the ADRs recorded here (mention their `mem_NNN` ids in the body). If several rough plans already exist around the same theme, invoke the **`triage`** skill to consolidate them instead.
+After the interview, offer to capture the agreed plan as a `plan` memory — goal, approach, ordered steps with done-conditions, and acceptance criteria — linked to the ADRs recorded here (mention their `mem_NNN` ids in the body). If several rough plans already exist around the same theme, consolidate them into one updated plan memory (`columbus memory update`) instead of adding a duplicate.
 
 Finally, run `columbus memory validate` to surface evidence anchors that have drifted from the code, and re-check the decisions you anchored.
