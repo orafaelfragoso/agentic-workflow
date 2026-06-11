@@ -33,7 +33,7 @@ Work in this order. Stop as soon as you can answer the query — most questions 
 1. **Broad locate pass — always start here:**
 
    ```
-   columbus search "<query>" --llm --limit 10
+   columbus search "<query>" --llm
    ```
 
    Columbus retrieves **semantically** (on-device embeddings, vector kNN) and re-ranks deterministically, so a natural-language query works well here. This is compact by default (no code bodies). Read the ranked hits and identify the 1–4 symbols/files that actually answer the query. Only add `--snippets` if you genuinely need bodies for the whole result set in one shot (rare — prefer targeted drill-down below). `--limit` is a global flag.
@@ -79,11 +79,10 @@ Work in this order. Stop as soon as you can answer the query — most questions 
 - **Query in natural language - describe intent, not just tokens.** Retrieval is semantic (vector similarity over on-device embeddings), so a short phrase that names what the code _does_ - `how are credentials verified` or `rank search results by score` - retrieves well, then deterministic heuristics re-rank with symbol-name/role/density signals. Including the concrete identifiers you expect (`tokenize`, `Engine.Search`) still sharpens the re-rank, so blend intent with the obvious nouns. If the runtime is unavailable Columbus silently degrades to keyword (FTS) search; concrete identifiers matter more then.
 - **Hard ceiling: ~4-6 tool calls, total - including any `show`.** Columbus exists to _cut_ tool calls; if you're past 6 you're defeating its purpose. The moment you hit the ceiling, stop and write the report with what you have, noting any gap. Dozens of calls is always wrong.
 - **Survey mode: ~3-4 calls, ZERO `show`.** A broad architecture survey (e.g. onboarding) is **2-3 distinct-angle `search` passes** (entry points, core abstractions, key flows) **plus one `graphs` backbone pass** - and nothing else. Each `search --llm` already lists every relevant symbol with its `path:line` and signature, so you have all the citations from those few calls. Do not `show` symbols/files to "verify" or "flesh out" the report; that is exactly the fan-out (34 calls to do a 4-call job) this agent must avoid. A single pointed question is even cheaper: 2-4 calls.
-- **Bias to fewer, richer calls.** One `search --llm --limit 20` beats four narrow searches. Raising `--limit` on a single pass is nearly free compared to another round-trip; widen the net once instead of fanning out.
+- **Bias to fewer, richer calls.** One `search --llm` beats four narrow searches. Raising `--limit` (default is 20) on a single pass is nearly free compared to another round-trip; widen the net once instead of fanning out.
 - **One broad search, not many.** Do **not** re-run `search` with reworded synonyms of the same concept. A second near-duplicate query buys little and costs a full result set. If the first pass missed, change the _target_ (a specific symbol/file), not the wording.
 - **Never fetch the same thing twice.** Track what you've already pulled (`show file X`, `show symbol Y`) and don't repeat it.
 - **Don't pre-index.** Only run `columbus reindex` if a command actually fails with an index-missing error; then retry that one command.
-- **Bodies are opt-in.** Reach for code bodies (`--snippets` on a search, or `show symbol`) only when you've decided a specific symbol's implementation is required for the answer.
 
 ## Rules
 
