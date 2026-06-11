@@ -11,7 +11,7 @@
       "source": ".",
       "displayName": "Columbus Workflow",
       "description": "Columbus workflow with a fast indexed memory system, reusable skills, agents, and hooks.",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "category": "Developer Tools",
       "tags": [
         "orafaelfragoso",

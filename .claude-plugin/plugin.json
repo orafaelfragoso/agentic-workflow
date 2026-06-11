@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "columbus-workflow",
   "displayName": "Columbus Workflow",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Columbus workflow with a fast indexed memory system, reusable skills, agents, and hooks.",
   "author": {
     "name": "Rafael Fragoso",
@@ -29,9 +29,7 @@
     "./plugins/columbus-workflow/agents/architecture-reviewer.md",
     "./plugins/columbus-workflow/agents/release-coordinator.md"
   ],
-  "outputStyles": [
-    "./plugins/columbus-workflow/output-styles/caveman.md"
-  ],
+  "outputStyles": ["./plugins/columbus-workflow/output-styles/caveman.md"],
   "hooks": {
     "PreToolUse": [
       {
