@@ -24,6 +24,14 @@ Set up everything the Columbus Workflow plugin needs — global Claude Code defa
    - `enabledPlugins` in the target contains a `columbus-workflow@...` entry. If the user installed the plugin from a marketplace other than `orafaelfragoso`, correct the key to match their marketplace.
    - `statusLine.command` in the target points to an existing executable file.
    - The statusline script runs: `echo '{}' | <statusline path>` exits 0 and prints a line.
+   - The rtk hook rewrites (skip when `rtk` is not installed): feed the hook script a sample PreToolUse payload and expect a rewrite envelope —
+
+     ```sh
+     echo '{"tool_name":"Bash","tool_input":{"command":"grep -rn foo ."}}' \
+       | "<plugin root>/plugins/columbus-workflow/scripts/rtk-rewrite.sh"
+     ```
+
+     The output must be a `hookSpecificOutput` JSON object whose `updatedInput.command` starts with `rtk `. If it is empty, check `rtk --version` (the hook needs `rtk hook claude`, rtk >= 0.42). Note: `rtk gain` prints a "No hook installed" warning even when this plugin's hook is active — it only detects `rtk init`-style hooks in `settings.json`, so ignore that warning.
 6. Set up Columbus for the current project (skip if `columbus` is missing): if there is no `.columbus.json` in the project root, offer to run `columbus install` (it writes `.columbus.json`, creates the project database, and indexes the repo — get the user's go-ahead first). If the project is already configured, run `columbus doctor` and report any problems.
 7. Tell the user the env-based settings (for example `CLAUDE_CODE_DISABLE_AUTO_MEMORY`) take effect on the next Claude Code session, and mention the backup path if one was created.
 
@@ -45,3 +53,4 @@ Set up everything the Columbus Workflow plugin needs — global Claude Code defa
 - [ ] Statusline script produces output when fed `{}` on stdin.
 - [ ] `columbus doctor` reports a healthy project, or the user explicitly deferred Columbus setup.
 - [ ] `rtk` is installed, or the user was told the rewrite hook is inactive without it.
+- [ ] The rtk hook self-test produced an `updatedInput` rewrite, or rtk's absence was reported.
