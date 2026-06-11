@@ -13,7 +13,7 @@ jobs:
   consistency:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Install shellcheck
         run: sudo apt-get update && sudo apt-get install -y shellcheck
       - name: Run consistency checks
@@ -23,8 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
+        run: npm install -g @anthropic-ai/claude-code@2.1.172 # pinned; bump deliberately
       - name: Validate plugin
         run: claude plugin validate .

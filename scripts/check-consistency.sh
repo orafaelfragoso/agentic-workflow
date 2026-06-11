@@ -53,10 +53,34 @@ echo "ok: manifest agents exist"
 # Check 5: Skill frontmatter names — the name: field in each SKILL.md must
 # match the skill's parent directory name
 # ----------------------------------------------------------------------------
-for skill_file in plugins/columbus-workflow/skills/*/SKILL.md; do
+shopt -s nullglob
+skill_files=( plugins/columbus-workflow/skills/*/SKILL.md )
+shopt -u nullglob
+if [ "${#skill_files[@]}" -eq 0 ]; then
+  echo "error: no SKILL.md files found under plugins/columbus-workflow/skills/ — skills must exist" >&2
+  exit 1
+fi
+for skill_file in "${skill_files[@]}"; do
   dir_name="$(basename "$(dirname "${skill_file}")")"
-  # Parse the name: line from YAML frontmatter, trimming leading/trailing whitespace
-  frontmatter_name="$(grep -m1 '^name:' "${skill_file}" | sed 's/^name:[[:space:]]*//' | tr -d '\r' | sed 's/[[:space:]]*$//')"
+  # Extract name: from within the YAML frontmatter block (between the first and second ---).
+  # awk tracks fence state: fence=0 before first ---, fence=1 inside, fence=2 after.
+  frontmatter_name="$(awk '
+    /^---/ {
+      fence++
+      next
+    }
+    fence == 1 && /^name:[[:space:]]/ {
+      sub(/^name:[[:space:]]*/, "")
+      gsub(/[[:space:]]*$/, "")
+      print
+      exit
+    }
+    fence >= 2 { exit }
+  ' "${skill_file}")"
+  if [ -z "${frontmatter_name}" ]; then
+    echo "error: no name: field found in YAML frontmatter of ${skill_file}" >&2
+    exit 1
+  fi
   if [ "${frontmatter_name}" != "${dir_name}" ]; then
     echo "error: skill frontmatter mismatch in ${skill_file}: name '${frontmatter_name}' != directory '${dir_name}'" >&2
     exit 1
@@ -71,9 +95,17 @@ echo "ok: skill frontmatter names"
 if ! command -v shellcheck &> /dev/null; then
   echo "warning: shellcheck not found on PATH — skipping shellcheck (CI installs it)" >&2
 else
-  shellcheck --exclude=SC2034 \
-    plugins/columbus-workflow/scripts/*.sh \
-    plugins/columbus-workflow/skills/*/scripts/*.sh \
+  shopt -s nullglob
+  sh_files=(
+    plugins/columbus-workflow/scripts/*.sh
+    plugins/columbus-workflow/skills/*/scripts/*.sh
     scripts/*.sh
-  echo "ok: shellcheck"
+  )
+  shopt -u nullglob
+  if [ "${#sh_files[@]}" -eq 0 ]; then
+    echo "warning: no shell scripts found for shellcheck — skipping" >&2
+  else
+    shellcheck --exclude=SC2034 "${sh_files[@]}"
+    echo "ok: shellcheck"
+  fi
 fi
