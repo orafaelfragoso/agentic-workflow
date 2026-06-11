@@ -6,10 +6,10 @@ The founding rule survives unchanged: **the advisor never edits source code.** R
 
 ## Lifecycle of a plan memory
 
-Columbus's memory model is the guide: plans are intended future work, and **plans age out — re-kind or remove them when they're no longer future work.**
+Columbus's memory model is the guide: plans are intended future work, and **plans age out — remove them when they're no longer future work.**
 
 - **Written** → `columbus memory add plan`, tagged `improve` + category, anchored with links and evidence.
-- **Executed and verified** → re-kind it: `columbus memory update mem_NN --kind documentation`, and rewrite the body from "what to do" into "how it now works" (keep the why; drop the steps; refresh links/evidence to the landed code). If nothing durable is worth keeping, `columbus memory remove mem_NN` instead.
+- **Executed and verified** → `columbus memory remove mem_NN`. Do not convert the plan into a `documentation` memory — plans describe intent, not reality, and a rewritten plan makes poor documentation. If the shipped work left a process or behavior that genuinely needs explaining, write a fresh `documentation` memory (or `adr` for the decision) anchored to the landed code; otherwise record nothing.
 - **Blocked** → update the body with the blocker and what was learned — a one-line `BLOCKED: <reason>` near the top of the body keeps it visible to the next session.
 - **Rejected / abandoned** → `columbus memory remove mem_NN`, noting the rationale in the session report. If the rejection is a durable judgment ("we will not migrate to X because Y"), record it as an `adr` so future audits inherit it.
 
@@ -24,7 +24,7 @@ columbus memory validate                              # evidence drift, dead lin
 
 Then judge each plan's state from its body (executors and the ship workflow note progress and blockers there) and from the code itself:
 
-- **Shipped** — the plan's done criteria hold on the current HEAD (spot-check the cheap ones). If the plan memory wasn't re-kinded when it shipped, do it now (see lifecycle above).
+- **Shipped** — the plan's done criteria hold on the current HEAD (spot-check the cheap ones). If the plan memory wasn't removed when it shipped, remove it now (see lifecycle above for when a fresh `documentation` memory is warranted first).
 - **Blocked** (body carries a blocker note) — read the reason. Investigate the underlying obstacle in the codebase. Either rewrite the plan around it (`memory update` with a refreshed body and new `Planned at` SHA) or remove it and note the rejection in the report (record an `adr` if it's a durable judgment).
 - **Stale in-progress** (body notes started work but nothing landed) — flag it to the user; an executor probably died mid-run. Check for a leftover branch or worktree if one was used.
 - **Still TODO** — run the plan's drift check (`git diff --stat <planned-at SHA>..HEAD -- <in-scope paths>`) and heed `memory validate`'s drift report. If drifted: re-verify the finding still exists (it may have been fixed in passing), then refresh the "Current state" excerpts, evidence ranges, and `Planned at` SHA via `memory update`. If the finding is gone, remove the plan and note "fixed independently" in the report.

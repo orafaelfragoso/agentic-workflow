@@ -7,7 +7,7 @@ Columbus memory is the durable knowledge layer. It preserves project decisions, 
 `columbus memory` has exactly three kinds:
 
 - `adr`: an architecture decision record — a decision made, its rationale, and its consequences. Durable; supersede with a new ADR rather than rewriting history.
-- `plan`: intended future work — a design, migration, or implementation plan that has not fully happened yet. Plans age out: remove or re-kind them when executed.
+- `plan`: intended future work — a design, migration, or implementation plan that has not fully happened yet. Plans age out: remove them when executed; record anything durable as a fresh `adr` or `documentation` memory instead of converting the plan.
 - `documentation`: how something currently works — subsystem explanations, patterns, gotchas, operational recipes, glossary-style definitions.
 
 Choosing a kind: "we chose X over Y because…" is an `adr`; "we are going to…" is a `plan`; "this is how X works / beware of Y" is `documentation`.
@@ -40,7 +40,7 @@ columbus memory add documentation \
 
 ## Updating
 
-`memory update <id>` is partial: pass only the fields to change. Anchors use add/remove pairs, and `--kind` re-kinds a memory (e.g. a `plan` that shipped becomes `documentation`):
+`memory update <id>` is partial: pass only the fields to change. Anchors use add/remove pairs, and `--kind` re-kinds a memory that was filed under the wrong kind (do not use it to convert an executed `plan` into `documentation` — remove the plan and write documentation fresh if it's warranted):
 
 ```sh
 columbus memory update mem_12 --body "Updated explanation" --add-tag search
@@ -59,7 +59,7 @@ columbus memory validate
 
 ## Removal
 
-`memory remove <id>` is a hard delete and the id is retired. Prefer updating or re-kinding over deleting, except for plans that were abandoned or duplicates.
+`memory remove <id>` is a hard delete and the id is retired. Prefer updating over deleting for `adr` and `documentation`; plans are the exception — remove them once executed, abandoned, or duplicated.
 
 ## Retrieval
 

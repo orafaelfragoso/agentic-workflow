@@ -52,7 +52,7 @@ columbus memory add adr --title "Use local embeddings" --body "..." --tag infra
 columbus memory add documentation --title "Search projection" --body "..." \
   --link file:internal/search/projector.go --evidence internal/search/projector.go:24-67
 columbus memory update mem_12 --body "Updated text" --add-tag search
-columbus memory update mem_12 --kind documentation   # re-kind a memory
+columbus memory update mem_12 --kind documentation   # re-kind a misfiled memory
 columbus memory validate
 columbus memory remove mem_12
 ```

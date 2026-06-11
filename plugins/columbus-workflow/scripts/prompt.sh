@@ -12,7 +12,7 @@ cat <<'EOF'
 
 ### Delivery workflow
 - Use the `ship` skill for delivery work scoped by Columbus `plan` memories. Choose direct, sequential, or parallel flow from actual dependencies, and state the branch/worktree strategy before implementation.
-- Track live execution state (in progress, blocked, done) in the session, not in Columbus. At milestones, update the driving `plan` memory so progress survives the session; after verified delivery, record decisions as `adr`, shipped behavior as `documentation`, and re-kind or remove the executed plan.
+- Track live execution state (in progress, blocked, done) in the session, not in Columbus. At milestones, update the driving `plan` memory so progress survives the session; after verified delivery, record decisions as `adr`, then remove the executed plan. Add a `documentation` memory only when a process or behavior genuinely needs explaining — write it fresh, never by converting a plan.
 - Delegate sparingly: `navigator` for codebase exploration, the most specific delivery agent otherwise. Give each agent a self-contained brief and trust its returned report instead of re-deriving the work.
 
 ### Making changes

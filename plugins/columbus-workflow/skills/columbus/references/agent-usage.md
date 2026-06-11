@@ -26,7 +26,7 @@ In `ship`, the active session coordinates:
 2. Ask `navigator` for code context if needed.
 3. Pass scoped findings to task agents.
 4. Verify deliverables.
-5. Record durable outcomes: decisions as `adr`, shipped behavior as `documentation`; re-kind or remove executed `plan` memories.
+5. Record durable outcomes: decisions as `adr`; `documentation` only when a process or behavior genuinely needs explaining. Remove executed `plan` memories.
 
 Task agents should not each re-run broad memory retrieval or repeat wide searches; the coordinator passes each one the scoped context its task needs.
 
