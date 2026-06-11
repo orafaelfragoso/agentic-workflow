@@ -37,8 +37,8 @@ Create a focused task agent that can be used by any compatible agent host and fi
    - Context-gathering agents, such as `navigator`, are the exception and should return one cited report instead of spreading retrieval across agents.
 
 6. **Choose model policy**
-   - Omit model selection unless the target host supports it and the role clearly needs an override.
-   - If supported, map the role to the host's documented model aliases or IDs. Do not hard-code provider-specific names into portable agents unless the user asked for that host.
+   - For agents that integrate with the ship skill, use the ship skill's model table: `haiku` for lightweight or high-frequency tasks, `sonnet` for standard delivery and review tasks, `opus` for tasks requiring deep judgment (architecture, release coordination). Use only these three aliases — `haiku`, `sonnet`, `opus`. Do not use other model names.
+   - For agents outside the ship skill context, omit model selection unless the target host supports it and the role clearly needs an override.
 
 7. **Write the file**
    - Use the target host's supported frontmatter fields.
@@ -80,12 +80,16 @@ The body after frontmatter is the agent's system prompt. It should:
 - List key rules and constraints derived from current docs or local project context
 - Include current version pins, canonical patterns, or gotchas discovered during research
 - State Columbus boundaries: receive scoped context, do not load global memory unless asked
-- End with the exact output the agent should produce: diff, report, plan, test result, or artifact
+- End with the JSON output schema from the ship skill protocol:
+  ```json
+  { "status": "done" | "partial" | "blocked", "cause": "<short phrase>", "risks": ["<label>"] }
+  ```
+  Use `cause` only when `status` is `partial` or `blocked`. `risks` is an array of short labels; empty array when none.
 - Stay under about 80 lines; focused beats exhaustive
 
 ## Example Output
 
-```markdown
+````markdown
 ---
 name: api-contract-reviewer
 description: >
@@ -106,12 +110,12 @@ Rules:
 - Use Columbus context provided in the brief; do not load global memory or broad reports unless asked.
 - Do not perform unrelated implementation work.
 
-Return:
+Return JSON only:
 
-- Findings ordered by severity with file references.
-- Contract-safe alternatives for each blocking issue.
-- Any test gaps that would leave the contract unprotected.
+```json
+{ "status": "done" | "partial" | "blocked", "cause": "<short phrase>", "risks": ["<label>"] }
 ```
+````
 
 ## Research Checklist
 
@@ -131,4 +135,6 @@ Before writing the system prompt, verify from docs:
 - [ ] Description has realistic trigger language.
 - [ ] Capabilities are least-privilege.
 - [ ] Prompt states the Columbus memory boundary for task agents.
+- [ ] Model uses only `haiku`, `sonnet`, or `opus` aliases (for ship-integrated agents).
+- [ ] Return section uses the JSON protocol: `{ status, cause, risks }`.
 - [ ] Manifest or registration was updated only when required.

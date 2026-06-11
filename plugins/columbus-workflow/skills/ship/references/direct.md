@@ -26,15 +26,15 @@ Use direct orchestration when one delivery lane can complete a single scoped pie
 
 Run the stages in order; each is a deployed agent with a scoped brief:
 
-1. **Explore** — `navigator`, only if code locations or dependency shape are unclear (the plan memory's links and evidence often already pin them).
-2. **Implement** — `delivery-engineer` on the lane's branch. The brief carries: plan memory id and the relevant body excerpt, acceptance criteria, files in scope, branch name, constraints, and the expected report format.
-3. **Verify** — `test-engineer` runs and extends verification against the acceptance criteria. May be combined with stage 2 only when the plan explicitly includes the test work in the delivery-engineer's scope.
-4. **Review** — `quality-reviewer` on the diff. Add `security-analyst` if dependencies, auth, permissions, secrets, data handling, or network exposure changed; add `architecture-reviewer` if abstractions, boundaries, or shared flows changed.
+1. **Explore** — `navigator` (model: sonnet), only if code locations or dependency shape are unclear (the plan memory's links and evidence often already pin them).
+2. **Implement** — `delivery-engineer` (model: sonnet) on the lane's branch. The brief carries: plan memory id and the relevant body excerpt, acceptance criteria, files in scope, branch name, and constraints.
+3. **Verify** — `test-engineer` (model: sonnet) runs and extends verification against the acceptance criteria. May be combined with stage 2 only when the plan explicitly includes the test work in the delivery-engineer's scope.
+4. **Review** — `quality-reviewer` (model: sonnet) on the diff. Add `security-analyst` (model: sonnet) if dependencies, auth, permissions, secrets, data handling, or network exposure changed; add `architecture-reviewer` (model: opus) if abstractions, boundaries, or shared flows changed.
 5. **Close** — the coordinator checks the gates, then writes memory (below).
 
 If a review gate fails, send the findings back to the `delivery-engineer` as a new scoped brief. Max two revision rounds; then stop, record the blocker in the plan memory, and surface to the user.
 
-The coordinator's own contributions are limited to: reading reports and diffs, running read-only checks to confirm gate claims, branch management, and memory writes. Record meaningful discoveries in the plan memory body, not chat-only notes:
+The coordinator's own contributions are limited to: reading agent JSON reports, running read-only checks to confirm gate claims, branch management, and memory writes. The coordinator never reads diffs — gate agents (quality-reviewer, test-engineer, security-analyst, architecture-reviewer) fetch the diff themselves. Record meaningful discoveries in the plan memory body, not chat-only notes:
 
 ```sh
 columbus memory update mem_12 --body "<plan body with progress notes and discoveries>"
@@ -60,12 +60,12 @@ Use a worktree (`isolation: "worktree"` on the agent) when the agent's edits mus
 
 ## Delivery Gates
 
-Run these in order, each backed by an agent report:
+Run these in order, each backed by an agent JSON report `{ status, cause, risks }`:
 
 1. Acceptance criteria check (coordinator, against the plan memory).
-2. Implementation (`delivery-engineer` report + diff).
-3. Tests or explicit verification (`test-engineer` report).
-4. Code quality review (`quality-reviewer` report).
+2. Implementation (`delivery-engineer` JSON report).
+3. Tests or explicit verification (`test-engineer` JSON report).
+4. Code quality review (`quality-reviewer` JSON report).
 5. Security/CVE check (`security-analyst`) if dependencies, auth, permissions, secrets, data handling, or network exposure changed.
 6. Architecture/design-pattern check (`architecture-reviewer`) if abstractions, boundaries, or shared flows changed.
 

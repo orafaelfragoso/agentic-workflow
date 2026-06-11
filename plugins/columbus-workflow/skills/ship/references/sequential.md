@@ -14,13 +14,13 @@ Use sequential orchestration when work must pass through ordered stages or one a
 Each stage names the agent that runs it:
 
 1. Planning (coordinator): clarify acceptance criteria, dependencies, branch strategy, and the plan-memory scope.
-2. Exploration (`navigator`): code locations, graph shape, and recorded decisions.
-3. Implementation (`delivery-engineer`): the minimal scoped change on the stated branch or worktree.
-4. Testing (`test-engineer`): add or run behavior-focused tests.
-5. Quality review (`quality-reviewer`): correctness, maintainability, naming, and regression risk.
-6. Security review (`security-analyst`): CVEs, dependency risk, auth, permissions, secrets, injection, and data handling.
-7. Architecture review (`architecture-reviewer`): design patterns, boundaries, coupling, and long-term maintainability.
-8. Release readiness (`release-coordinator`): verification summary, branch/PR state, memory updates, and follow-ups.
+2. Exploration (`navigator`, model: sonnet): code locations, graph shape, and recorded decisions.
+3. Implementation (`delivery-engineer`, model: sonnet): the minimal scoped change on the stated branch or worktree.
+4. Testing (`test-engineer`, model: sonnet): add or run behavior-focused tests.
+5. Quality review (`quality-reviewer`, model: sonnet): correctness, maintainability, naming, and regression risk.
+6. Security review (`security-analyst`, model: sonnet): CVEs, dependency risk, auth, permissions, secrets, injection, and data handling.
+7. Architecture review (`architecture-reviewer`, model: opus): design patterns, boundaries, coupling, and long-term maintainability.
+8. Release readiness (`release-coordinator`, model: opus): verification summary, branch/PR state, memory updates, and follow-ups.
 
 A failed gate sends the findings back to the stage's agent as a new scoped brief (max two revision rounds, then record the blocker and stop). The coordinator never absorbs a failed stage's work itself.
 
@@ -53,19 +53,17 @@ Each handoff brief should include:
 - the plan memory id and the relevant excerpt of its body
 - current branch or worktree
 - scoped memory findings (ADRs, documentation) that apply
-- relevant `navigator` report
+- relevant `navigator` context block (pasted directly from navigator output)
 - stage goal
 - constraints and non-goals
-- expected output
 
-Each agent returns:
+Each agent returns JSON:
 
-- findings or changes
-- files touched or recommended
-- commands run
-- risks
-- next-stage input
-- memory updates recommended (the coordinator writes them)
+```json
+{ "status": "done" | "partial" | "blocked", "cause": "<short phrase>", "risks": ["<label>"] }
+```
+
+`cause` is omitted when `status` is `"done"`. `risks` is an array of short labels; empty array when none. The coordinator reads the JSON status and risk labels — never the raw diff.
 
 ## Branch Strategy
 

@@ -54,14 +54,15 @@ Each lane gets a scoped brief:
 - owned files or subsystem
 - do-not-touch areas
 - relevant memory findings (ADRs, documentation)
-- expected output and verification
+- model to use (per the ship skill model table)
 
-Agents communicate through:
+Agents report back with JSON:
 
-- returned reports
-- branch names and verification commands
+```json
+{ "status": "done" | "partial" | "blocked", "cause": "<short phrase>", "risks": ["<label>"] }
+```
 
-The coordinator synthesizes lane reports and performs any memory writes. Do not rely on chat-only context for facts another lane needs — put shared facts in the briefs.
+The coordinator reads JSON status and risk labels — never the raw diff. Diff reading belongs to gate agents (quality-reviewer, test-engineer, security-analyst, architecture-reviewer), which fetch the diff themselves. Do not rely on chat-only context for facts another lane needs — put shared facts in the briefs.
 
 ## Parallel Quality Gates
 
@@ -83,12 +84,12 @@ Unsafe parallel gates:
 
 After lanes finish:
 
-1. Collect each lane report.
-2. Check branch status and diffs.
-3. Merge or apply changes one lane at a time (git mechanics are the coordinator's).
-4. Resolve code conflicts by dispatching a `delivery-engineer` briefed with both lanes' reports — the coordinator does not hand-edit conflicting source.
-5. Run combined verification (`test-engineer` on the merged result).
-6. Run final quality, security, and architecture gates on the merged result with the matching review agents.
+1. Collect each lane JSON report.
+2. Check branch status (git commands are the coordinator's).
+3. Merge or apply changes one lane at a time.
+4. Resolve code conflicts by dispatching a `delivery-engineer` (model: sonnet) briefed with both lanes' JSON reports — the coordinator does not hand-edit conflicting source.
+5. Run combined verification (`test-engineer`, model: sonnet, on the merged result).
+6. Run final quality (`quality-reviewer`, model: sonnet), security (`security-analyst`, model: sonnet), and architecture (`architecture-reviewer`, model: opus) gates on the merged result.
 
 ## Closeout
 

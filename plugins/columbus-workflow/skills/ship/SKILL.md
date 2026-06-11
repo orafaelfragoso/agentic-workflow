@@ -11,7 +11,7 @@ Columbus is durable memory, not a live board: `plan` memories hold the scoped wo
 
 ## The coordinator rule
 
-**The active session is a coordinator, never an implementer.** It does not edit source files, write tests, or perform reviews itself — not even "trivial" one-line fixes. Every piece of delivery work is done by a deployed task agent; the coordinator scopes briefs, manages branches and worktrees, reads returned reports and diffs, makes gate decisions, and writes memory. If work seems too small to delegate, it is still delegated — a small brief to a `delivery-engineer` is cheap; an unreviewed coordinator edit is not.
+**The active session is a coordinator, never an implementer.** It does not edit source files, write tests, perform reviews, or read diffs itself. Every piece of delivery work is done by a deployed task agent; the coordinator scopes briefs, manages branches and worktrees, reads returned JSON reports, makes gate decisions, and writes memory. Diff reading belongs to the agents that own the gate — quality-reviewer, test-engineer, security-analyst, and architecture-reviewer each fetch the diff themselves.
 
 Every mode runs the same **agentic loop**, differing only in how many lanes run it and in what order:
 
@@ -22,6 +22,44 @@ Every mode runs the same **agentic loop**, differing only in how many lanes run 
 5. **Close** — `release-coordinator` for branch/PR/merge readiness when shipping; the coordinator records memory.
 
 A failed gate loops back: the reviewer's findings become a new scoped brief for the implementing agent (max two revision rounds, then stop and surface to the user).
+
+## Stage classification
+
+Classify the work **before deploying any agent** to skip unnecessary stages:
+
+| Stage        | Condition                                                     | Skip                                                  |
+| ------------ | ------------------------------------------------------------- | ----------------------------------------------------- |
+| **Trivial**  | < 5 files, no shared flows or arch boundaries                 | navigator, security-analyst, architecture-reviewer    |
+| **Standard** | multi-file, no boundary changes                               | architecture-reviewer (unless boundaries are touched) |
+| **Complex**  | touches shared flows, module boundaries, or security surfaces | run full loop                                         |
+
+State the classification and any skipped stages before the first agent is deployed.
+
+## Model assignments
+
+Deploy each agent with its assigned model:
+
+| Agent                 | Model  |
+| --------------------- | ------ |
+| navigator             | sonnet |
+| delivery-engineer     | sonnet |
+| test-engineer         | sonnet |
+| quality-reviewer      | sonnet |
+| security-analyst      | sonnet |
+| architecture-reviewer | opus   |
+| release-coordinator   | opus   |
+
+## Brief and report protocol
+
+**Brief** (coordinator → agent): one clear action sentence + the necessary context (plan id, relevant memory excerpt, branch, files in scope, acceptance criteria, constraints). Do not include context the agent does not need for its specific task.
+
+**Report** (agent → coordinator): JSON only.
+
+```json
+{ "status": "done" | "partial" | "blocked", "cause": "<short phrase when partial or blocked>", "risks": ["<risk-label>"] }
+```
+
+`cause` is omitted when `status` is `"done"`. `risks` is an array of short labels (e.g. `"auth"`, `"scope-widened"`, `"arch-boundary"`); empty array when none.
 
 ## Workflow
 
@@ -42,12 +80,12 @@ A failed gate loops back: the reviewer's findings become a new scoped brief for 
 
 4. **Run the agentic loop with explicit handoffs**
    - Deploy the loop's agents per the chosen mode's reference; never absorb a stage into the coordinator.
-   - Communicate through scoped briefs and returned reports. Each brief carries the plan scope, branch/worktree, constraints, and expected output; each report returns findings, files touched, commands run, and risks.
+   - Communicate through scoped briefs and JSON reports per the protocol above. The coordinator reads agent JSON status and risks — never the raw diff.
    - The coordinator owns synthesis and all memory writes.
 
 5. **Apply delivery gates**
    - Acceptance criteria and dependency check.
-   - Implementation and test evidence (from agent reports — re-check key claims against the diff).
+   - Implementation and test evidence (from agent JSON reports).
    - Code quality review.
    - Security and dependency/CVE review when dependencies, auth, data handling, or network exposure are touched.
    - Architecture/design-pattern review when boundaries, abstractions, or shared flows change.
@@ -67,5 +105,9 @@ A failed gate loops back: the reviewer's findings become a new scoped brief for 
 - [ ] The driving plan memory reflects current progress and any blockers.
 - [ ] Agent handoffs were explicit and scoped.
 - [ ] Branch/worktree strategy was stated before the first agent was deployed.
+- [ ] Stage classification was stated before the first agent was deployed.
+- [ ] Each agent was deployed with its assigned model from the model table.
+- [ ] All agent communication used the JSON brief/report protocol.
+- [ ] The coordinator did not read diffs — gate agents fetched their own.
 - [ ] Implementation, tests, review, security, and architecture gates were run or explicitly skipped with a reason.
 - [ ] Durable outcomes were captured: ADRs for decisions, documentation for shipped behavior, executed plans re-kinded or removed.
